@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db'
 import { getTodayString } from '@/lib/utils'
 import { isTaskScheduledForDate } from '@/lib/recurrence'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

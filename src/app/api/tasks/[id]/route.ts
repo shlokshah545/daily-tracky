@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 type RouteContext = { params: Promise<{ id: string }> }
 
 export async function GET(_req: NextRequest, context: RouteContext) {
