@@ -9,16 +9,17 @@ function getStoredTheme(): Theme {
 
 function applyTheme(theme: Theme) {
   if (typeof document === 'undefined') return
-  // CSS has :root (light) and html.dark (dark overrides)
   if (theme === 'dark') {
     document.documentElement.classList.add('dark')
     document.documentElement.classList.remove('light')
   } else {
     document.documentElement.classList.remove('dark')
-    document.documentElement.classList.remove('light')
+    document.documentElement.classList.add('light')
   }
+  document.documentElement.setAttribute('data-theme', theme)
   localStorage.setItem('dt-theme', theme)
 }
+
 
 interface UIState {
   sidebarCollapsed: boolean

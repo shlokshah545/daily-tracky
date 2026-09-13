@@ -28,14 +28,23 @@ export function MobileNav() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-around',
-        background: 'var(--color-bg-elevated)',
-        backdropFilter: 'blur(16px)',
-        borderTop: '1px solid var(--color-border)',
-        height: 'calc(58px + env(safe-area-inset-bottom, 0px))',
+        background: 'rgba(9, 9, 18, 0.85)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(51, 65, 85, 0.6)',
+        height: 'calc(60px + env(safe-area-inset-bottom, 0px))',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        boxShadow: '0 -2px 12px rgba(0,0,0,0.04)',
+        boxShadow: '0 -4px 24px rgba(0,0,0,0.3)',
       }}
     >
+      <style>{`
+        html.light nav.mobile-nav {
+          background: rgba(255,255,255,0.92) !important;
+          border-top-color: rgba(226,232,240,0.8) !important;
+          box-shadow: 0 -4px 20px rgba(0,0,0,0.06) !important;
+        }
+      `}</style>
+
       {NAV_ITEMS.slice(0, 2).map(({ href, icon: Icon, label }) => {
         const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
         return (
@@ -48,16 +57,21 @@ export function MobileNav() {
               alignItems: 'center',
               justifyContent: 'center',
               gap: 3,
-              padding: '6px 14px',
+              padding: '6px 16px',
               textDecoration: 'none',
-              color: isActive ? 'var(--color-accent)' : 'var(--color-text-tertiary)',
-              fontSize: 10.5,
+              color: isActive ? 'var(--accent-text)' : 'var(--text-4)',
+              fontSize: 10,
               fontWeight: isActive ? 700 : 500,
-              transition: 'color 0.12s ease',
+              transition: 'color 0.15s ease',
               minWidth: 52,
+              letterSpacing: isActive ? '0.01em' : '0',
             }}
           >
-            <Icon size={19} strokeWidth={isActive ? 2.5 : 1.8} />
+            <Icon
+              size={20}
+              strokeWidth={isActive ? 2.5 : 1.8}
+              style={{ filter: isActive ? 'drop-shadow(0 0 6px rgba(99,102,241,0.5))' : 'none' }}
+            />
             <span>{label}</span>
           </Link>
         )
@@ -71,16 +85,25 @@ export function MobileNav() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: 42,
-          height: 42,
+          width: 46,
+          height: 46,
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, var(--color-accent) 0%, #4f46e5 100%)',
+          background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
           color: 'white',
           border: 'none',
-          boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)',
+          boxShadow: '0 4px 20px rgba(99, 102, 241, 0.5), 0 0 0 3px rgba(99,102,241,0.15)',
           cursor: 'pointer',
           flexShrink: 0,
-          margin: '-12px 6px 0 6px',
+          margin: '-14px 8px 0 8px',
+          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.08)'
+          ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 24px rgba(99, 102, 241, 0.65), 0 0 0 4px rgba(99,102,241,0.2)'
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)'
+          ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 20px rgba(99, 102, 241, 0.5), 0 0 0 3px rgba(99,102,241,0.15)'
         }}
       >
         <Plus size={22} strokeWidth={2.5} />
@@ -98,16 +121,21 @@ export function MobileNav() {
               alignItems: 'center',
               justifyContent: 'center',
               gap: 3,
-              padding: '6px 14px',
+              padding: '6px 16px',
               textDecoration: 'none',
-              color: isActive ? 'var(--color-accent)' : 'var(--color-text-tertiary)',
-              fontSize: 10.5,
+              color: isActive ? 'var(--accent-text)' : 'var(--text-4)',
+              fontSize: 10,
               fontWeight: isActive ? 700 : 500,
-              transition: 'color 0.12s ease',
+              transition: 'color 0.15s ease',
               minWidth: 52,
+              letterSpacing: isActive ? '0.01em' : '0',
             }}
           >
-            <Icon size={19} strokeWidth={isActive ? 2.5 : 1.8} />
+            <Icon
+              size={20}
+              strokeWidth={isActive ? 2.5 : 1.8}
+              style={{ filter: isActive ? 'drop-shadow(0 0 6px rgba(99,102,241,0.5))' : 'none' }}
+            />
             <span>{label}</span>
           </Link>
         )

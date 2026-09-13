@@ -11,9 +11,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { taskModalOpen, closeTaskModal, taskModalId, projectModalOpen, closeProjectModal, projectModalId } = useUIStore()
 
   return (
-    <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--color-bg)' }}>
+    <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg)', position: 'relative' }}>
+      {/* Aurora background blobs — decorative only */}
+      <div className="aurora-blob aurora-1" aria-hidden="true" />
+      <div className="aurora-blob aurora-2" aria-hidden="true" />
+
       {/* Sidebar — desktop only */}
-      <div className="desktop-sidebar" style={{ display: 'none', height: '100%' }}>
+      <div className="desktop-sidebar" style={{ display: 'none', height: '100%', position: 'relative', zIndex: 2 }}>
         <Sidebar />
       </div>
 
@@ -30,7 +34,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         overflowY: 'auto',
         overflowX: 'hidden',
         minHeight: 0,
-        background: 'var(--color-bg)',
+        background: 'transparent',
+        position: 'relative',
+        zIndex: 1,
       }}>
         {children}
       </main>
