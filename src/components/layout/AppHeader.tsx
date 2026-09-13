@@ -46,7 +46,7 @@ export function AppHeader() {
             justifyContent: 'center',
             width: 34,
             height: 34,
-            borderRadius: 10,
+            borderRadius: 12,
             background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
             color: 'white',
             fontWeight: 900,
@@ -122,7 +122,7 @@ export function AppHeader() {
           style={{
             width: 36,
             height: 36,
-            borderRadius: 10,
+            borderRadius: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

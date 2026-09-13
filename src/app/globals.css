@@ -47,12 +47,12 @@ html.dark {
 
   /* Layout */
   --sidebar-w:    244px;
-  --radius-xs:    4px;
-  --radius-sm:    8px;
-  --radius-md:    12px;
-  --radius-lg:    16px;
-  --radius-xl:    20px;
-  --radius-2xl:   24px;
+  --radius-xs:    6px;
+  --radius-sm:    10px;
+  --radius-md:    16px;
+  --radius-lg:    20px;
+  --radius-xl:    24px;
+  --radius-2xl:   28px;
 
   /* Shadows */
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
@@ -339,12 +339,23 @@ html.dark input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 /* ══════════════════════════════════════════════════════
+   CARDS & CONTAINERS
+══════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ══════════════════════════════════════════════════════
    TASK CARD
 ══════════════════════════════════════════════════════ */
 .task-row {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: 18px;
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: transform 0.18s cubic-bezier(0.4,0,0.2,1),
@@ -631,13 +642,13 @@ html.light .nav-item.active {
   justify-content: center;
   gap: 7px;
   font-weight: 600;
-  border-radius: var(--radius-sm);
+  border-radius: 100px;
   cursor: pointer;
   transition: all 0.14s cubic-bezier(0.4,0,0.2,1);
   border: 1px solid transparent;
   text-decoration: none;
   font-size: 13.5px;
-  padding: 8px 14px;
+  padding: 8px 16px;
   white-space: nowrap;
   letter-spacing: 0.01em;
 }
@@ -665,7 +676,7 @@ html.light .nav-item.active {
   border-color: var(--border-strong);
 }
 
-.btn-sm { padding: 6px 11px; font-size: 12.5px; }
+.btn-sm { padding: 6px 14px; font-size: 12.5px; }
 
 .btn-ghost {
   background: transparent;
@@ -693,8 +704,8 @@ html.light .nav-item.active {
 .input {
   background: var(--bg-elevated);
   border: 1.5px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
+  border-radius: 14px;
+  padding: 9px 14px;
   font-size: 14px;
   color: var(--text-1);
   outline: none;

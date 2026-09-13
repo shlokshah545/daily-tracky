@@ -69,20 +69,20 @@ export function TaskQuickAdd({ defaultDate, onAdd, placeholder }: Props) {
             display: 'flex',
             alignItems: 'center',
             gap: 12,
-            padding: '10px 16px',
+            padding: '10px 18px',
             background: 'var(--color-bg-elevated)',
-            border: `1.5px solid ${flash ? 'var(--color-success)' : 'var(--color-border-strong)'}`,
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-sm)',
+            border: `1.5px solid ${flash ? 'var(--color-success)' : 'var(--color-border)'}`,
+            borderRadius: 100,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             transition: 'border-color 0.15s, box-shadow 0.15s',
           }}
         >
           <div style={{
-            width: 26, height: 26, borderRadius: 'var(--radius-xs)',
+            width: 28, height: 28, borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: flash ? 'var(--color-success-muted)' : 'var(--color-bg-muted)',
+            background: flash ? 'var(--color-success-muted)' : 'var(--color-accent-muted)',
             flexShrink: 0,
-            color: flash ? 'var(--color-success)' : 'var(--color-text-secondary)',
+            color: flash ? 'var(--color-success)' : 'var(--color-accent-text)',
           }}>
             {loading ? (
               <Loader2 size={14} style={{ color: 'var(--color-accent)', animation: 'spin 0.7s linear infinite' }} />

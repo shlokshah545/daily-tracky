@@ -3,18 +3,21 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   Play, Pause, RotateCcw, Volume2, VolumeX, Maximize2, Minimize2,
-  CheckCircle2, Sparkles, Flame, Clock, Tag, Plus, Share2, Award
+  CheckCircle2, Sparkles, Flame, Clock, Tag, Plus, Share2, Award, Check, X
 } from 'lucide-react'
 import { useUIStore } from '@/lib/store'
 import type { Project } from '@/types'
 
 type TimerMode = 'focus' | 'stopwatch' | 'short_break'
 
-const PRESET_MINUTES = [15, 25, 33, 45, 60]
+const STANDARD_PRESETS = [15, 25, 33, 45, 60]
 
 export default function FocusTimerPage() {
   const [mode, setMode] = useState<TimerMode>('focus')
   const [presetMin, setPresetMin] = useState<number>(25)
+  const [isCustomActive, setIsCustomActive] = useState<boolean>(false)
+  const [showCustomInput, setShowCustomInput] = useState<boolean>(false)
+  const [customInputVal, setCustomInputVal] = useState<string>('')
   const [timeLeft, setTimeLeft] = useState<number>(25 * 60)
   const [stopwatchElapsed, setStopwatchElapsed] = useState<number>(0)
   const [isRunning, setIsRunning] = useState<boolean>(false)
@@ -47,7 +50,7 @@ export default function FocusTimerPage() {
       .catch(() => {})
   }, [selectedProjectId])
 
-  // Handle ambient sound (gentle calming warm hum / binaural frequency)
+  // Handle ambient sound
   useEffect(() => {
     if (soundEnabled && isRunning) {
       try {
@@ -55,11 +58,10 @@ export default function FocusTimerPage() {
         const ctx = new AudioCtx()
         audioCtxRef.current = ctx
 
-        // Gentle relaxing pink-noise/warm tone filter
         const osc = ctx.createOscillator()
         const gain = ctx.createGain()
         osc.type = 'sine'
-        osc.frequency.setValueAtTime(136.1, ctx.currentTime) // OM frequency / relaxing tone
+        osc.frequency.setValueAtTime(136.1, ctx.currentTime)
         gain.gain.setValueAtTime(0.04, ctx.currentTime)
 
         osc.connect(gain)
@@ -108,7 +110,6 @@ export default function FocusTimerPage() {
             if (t <= 1) {
               setIsRunning(false)
               setCompletedSessions(c => c + 1)
-              // Log 25 or presetMin minutes to daily log
               fetch('/api/analytics', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -143,11 +144,26 @@ export default function FocusTimerPage() {
     }
   }
 
-  // Preset change handler
+  // Standard preset change handler
   const handlePresetChange = (mins: number) => {
     setIsRunning(false)
+    setIsCustomActive(false)
+    setShowCustomInput(false)
     setPresetMin(mins)
     setTimeLeft(mins * 60)
+  }
+
+  // Apply custom time
+  const handleApplyCustomTime = (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    const val = parseInt(customInputVal, 10)
+    if (!isNaN(val) && val > 0 && val <= 360) {
+      setIsRunning(false)
+      setPresetMin(val)
+      setTimeLeft(val * 60)
+      setIsCustomActive(true)
+      setShowCustomInput(false)
+    }
   }
 
   // Format MM:SS
@@ -157,7 +173,6 @@ export default function FocusTimerPage() {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
   }
 
-  // Format minutes display
   const currentMinutesDisplay = Math.ceil(timeLeft / 60)
 
   // Fullscreen toggle
@@ -171,10 +186,10 @@ export default function FocusTimerPage() {
     }
   }
 
-  // Progress percentage
+  // Progress percentage (responsive radius 92)
   const totalSecs = mode === 'short_break' ? 5 * 60 : presetMin * 60
   const progressPct = mode === 'stopwatch' ? 100 : ((totalSecs - timeLeft) / totalSecs) * 100
-  const radius = 110
+  const radius = 92
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (progressPct / 100) * circumference
 
@@ -182,9 +197,9 @@ export default function FocusTimerPage() {
     <div
       className="page"
       style={{
-        maxWidth: 720,
+        maxWidth: 680,
         margin: '0 auto',
-        padding: '16px 16px 120px',
+        padding: '16px 16px 140px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -192,14 +207,13 @@ export default function FocusTimerPage() {
     >
       {/* ─── Mode Switcher Segmented Pills ─── */}
       <div
-        className="segmented-pill-container"
         style={{
           display: 'inline-flex',
           padding: 4,
           background: 'var(--color-bg-subtle)',
           borderRadius: 100,
           border: '1px solid var(--color-border)',
-          marginBottom: 20,
+          marginBottom: 16,
         }}
       >
         {(['focus', 'stopwatch', 'short_break'] as TimerMode[]).map(m => {
@@ -210,10 +224,10 @@ export default function FocusTimerPage() {
               key={m}
               onClick={() => handleModeChange(m)}
               style={{
-                padding: '7px 18px',
+                padding: '7px 16px',
                 borderRadius: 100,
                 fontSize: 12,
-                fontWeight: 700,
+                fontWeight: 800,
                 border: 'none',
                 cursor: 'pointer',
                 background: isActive ? 'var(--color-bg-elevated)' : 'transparent',
@@ -235,7 +249,7 @@ export default function FocusTimerPage() {
           display: 'flex',
           alignItems: 'center',
           gap: 10,
-          marginBottom: 28,
+          marginBottom: 20,
         }}
       >
         <button
@@ -252,7 +266,7 @@ export default function FocusTimerPage() {
             borderRadius: 100,
             padding: '6px 14px',
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 700,
             background: 'var(--color-accent-muted)',
             color: 'var(--color-accent-text)',
             border: '1px solid rgba(99, 102, 241, 0.25)',
@@ -272,7 +286,7 @@ export default function FocusTimerPage() {
             borderRadius: 100,
             padding: '6px 14px',
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 700,
             background: 'var(--color-success-muted)',
             color: 'var(--color-success-text)',
             border: '1px solid rgba(16, 185, 129, 0.25)',
@@ -286,8 +300,8 @@ export default function FocusTimerPage() {
           onClick={() => setSoundEnabled(s => !s)}
           className="icon-btn"
           style={{
-            width: 34,
-            height: 34,
+            width: 36,
+            height: 36,
             borderRadius: 100,
             background: soundEnabled ? 'var(--color-accent-muted)' : 'var(--color-bg-subtle)',
             color: soundEnabled ? 'var(--color-accent-text)' : 'var(--color-text-tertiary)',
@@ -295,15 +309,15 @@ export default function FocusTimerPage() {
           }}
           title={soundEnabled ? 'Disable Ambience' : 'Enable Calm Focus Tone'}
         >
-          {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+          {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
         </button>
 
         <button
           onClick={toggleFullscreen}
           className="icon-btn"
           style={{
-            width: 34,
-            height: 34,
+            width: 36,
+            height: 36,
             borderRadius: 100,
             background: 'var(--color-bg-subtle)',
             color: 'var(--color-text-tertiary)',
@@ -311,62 +325,45 @@ export default function FocusTimerPage() {
           }}
           title="Toggle Fullscreen"
         >
-          {isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+          {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
         </button>
       </div>
 
-      {/* ─── Hero Circular Timer Display ─── */}
+      {/* ─── Hero Circular Timer Display Card ─── */}
       <div
         className="card"
         style={{
           width: '100%',
           maxWidth: 440,
-          padding: '36px 24px 30px',
-          borderRadius: 32,
+          padding: '26px 20px 24px',
+          borderRadius: 28,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           position: 'relative',
           background: 'var(--color-bg-elevated)',
           border: '1px solid var(--color-border)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
-          overflow: 'hidden',
-          marginBottom: 24,
+          boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
+          marginBottom: 20,
         }}
       >
-        {/* Soft background glow arc */}
-        <div
-          style={{
-            position: 'absolute',
-            top: -60,
-            right: -60,
-            width: 180,
-            height: 180,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
-
         {/* Circular Progress with Digits */}
-        <div style={{ position: 'relative', width: 250, height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="250" height="250" viewBox="0 0 250 250" style={{ transform: 'rotate(-90deg)' }}>
-            {/* Background ring */}
+        <div style={{ position: 'relative', width: 216, height: 216, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="216" height="216" viewBox="0 0 216 216" style={{ transform: 'rotate(-90deg)' }}>
             <circle
-              cx="125"
-              cy="125"
+              cx="108"
+              cy="108"
               r={radius}
               stroke="var(--color-border)"
-              strokeWidth="10"
+              strokeWidth="9"
               fill="transparent"
             />
-            {/* Active animated stroke */}
             <circle
-              cx="125"
-              cy="125"
+              cx="108"
+              cy="108"
               r={radius}
               stroke="var(--color-accent)"
-              strokeWidth="10"
+              strokeWidth="9"
               fill="transparent"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -389,7 +386,7 @@ export default function FocusTimerPage() {
               <div
                 style={{
                   fontFamily: "'Outfit', 'Inter', monospace",
-                  fontSize: 54,
+                  fontSize: 48,
                   fontWeight: 900,
                   color: 'var(--color-text-primary)',
                   letterSpacing: '-0.04em',
@@ -399,11 +396,11 @@ export default function FocusTimerPage() {
                 {formatTime(stopwatchElapsed)}
               </div>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
                 <span
                   style={{
                     fontFamily: "'Outfit', 'Inter', sans-serif",
-                    fontSize: 72,
+                    fontSize: 64,
                     fontWeight: 900,
                     color: 'var(--color-text-primary)',
                     letterSpacing: '-0.04em',
@@ -415,7 +412,7 @@ export default function FocusTimerPage() {
                 <span
                   style={{
                     fontFamily: "'Outfit', 'Inter', sans-serif",
-                    fontSize: 26,
+                    fontSize: 24,
                     fontWeight: 600,
                     color: 'var(--color-text-tertiary)',
                   }}
@@ -427,12 +424,12 @@ export default function FocusTimerPage() {
 
             <div
               style={{
-                fontSize: 12,
-                fontWeight: 600,
+                fontSize: 11,
+                fontWeight: 700,
                 color: 'var(--color-text-tertiary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
-                marginTop: 6,
+                marginTop: 4,
               }}
             >
               {isRunning ? (mode === 'short_break' ? 'Break Time' : 'Flow State') : 'Ready'}
@@ -440,53 +437,139 @@ export default function FocusTimerPage() {
           </div>
         </div>
 
-        {/* ─── Duration Preset Chips (Focus Mode Only) ─── */}
+        {/* ─── Duration Preset Chips with Custom Option (Focus Mode Only) ─── */}
         {mode === 'focus' && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginTop: 20,
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}
-          >
-            {PRESET_MINUTES.map(mins => {
-              const isActive = presetMin === mins
-              return (
-                <button
-                  key={mins}
-                  onClick={() => handlePresetChange(mins)}
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 14 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 7,
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              {STANDARD_PRESETS.map(mins => {
+                const isActive = !isCustomActive && presetMin === mins
+                return (
+                  <button
+                    key={mins}
+                    onClick={() => handlePresetChange(mins)}
+                    style={{
+                      padding: '6px 14px',
+                      borderRadius: 100,
+                      fontSize: 12.5,
+                      fontWeight: isActive ? 800 : 600,
+                      cursor: 'pointer',
+                      border: `1.5px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                      background: isActive ? 'var(--color-accent)' : 'var(--color-bg-subtle)',
+                      color: isActive ? '#ffffff' : 'var(--color-text-secondary)',
+                      boxShadow: isActive ? '0 3px 10px rgba(99, 102, 241, 0.35)' : 'none',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {mins}m
+                  </button>
+                )
+              })}
+
+              {/* Custom Duration Button */}
+              <button
+                onClick={() => setShowCustomInput(s => !s)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: 100,
+                  fontSize: 12.5,
+                  fontWeight: isCustomActive ? 800 : 600,
+                  cursor: 'pointer',
+                  border: `1.5px solid ${isCustomActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                  background: isCustomActive ? 'var(--color-accent)' : 'var(--color-bg-subtle)',
+                  color: isCustomActive ? '#ffffff' : 'var(--color-text-secondary)',
+                  boxShadow: isCustomActive ? '0 3px 10px rgba(99, 102, 241, 0.35)' : 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {isCustomActive ? `${presetMin}m (Custom)` : 'Custom'}
+              </button>
+            </div>
+
+            {/* Custom Input Inline Form */}
+            {showCustomInput && (
+              <form
+                onSubmit={handleApplyCustomTime}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginTop: 12,
+                  padding: '5px 10px',
+                  borderRadius: 100,
+                  background: 'var(--color-bg-subtle)',
+                  border: '1.5px solid var(--color-accent)',
+                  boxShadow: '0 2px 8px rgba(99, 102, 241, 0.2)',
+                }}
+              >
+                <input
+                  type="number"
+                  min="1"
+                  max="360"
+                  autoFocus
+                  placeholder="Minutes (e.g. 50)"
+                  value={customInputVal}
+                  onChange={e => setCustomInputVal(e.target.value)}
                   style={{
-                    padding: '6px 14px',
-                    borderRadius: 100,
+                    width: 140,
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
                     fontSize: 13,
-                    fontWeight: isActive ? 700 : 500,
-                    cursor: 'pointer',
-                    border: `1.5px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                    background: isActive ? 'var(--color-accent)' : 'var(--color-bg-subtle)',
-                    color: isActive ? '#ffffff' : 'var(--color-text-secondary)',
-                    boxShadow: isActive ? '0 3px 12px rgba(99, 102, 241, 0.4)' : 'none',
-                    transition: 'all 0.15s ease',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                    padding: '4px 6px',
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-sm"
+                  style={{
+                    borderRadius: 100,
+                    padding: '4px 10px',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    background: 'var(--color-accent)',
+                    color: '#ffffff',
+                    border: 'none',
                   }}
                 >
-                  {mins}m
+                  Set
                 </button>
-              )
-            })}
+                <button
+                  type="button"
+                  onClick={() => setShowCustomInput(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--color-text-tertiary)',
+                    padding: 2,
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              </form>
+            )}
           </div>
         )}
       </div>
 
       {/* ─── Select Subject / Project Tags ─── */}
-      <div style={{ width: '100%', maxWidth: 440, marginBottom: 26 }}>
+      <div style={{ width: '100%', maxWidth: 440, marginBottom: 22 }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: 10,
+            marginBottom: 8,
             padding: '0 4px',
           }}
         >
@@ -506,7 +589,7 @@ export default function FocusTimerPage() {
           </span>
         </div>
 
-        {/* Horizontal Chips Strip */}
+        {/* Horizontal Chips Strip with rounded pills */}
         <div
           style={{
             display: 'flex',
@@ -524,8 +607,8 @@ export default function FocusTimerPage() {
               gap: 6,
               padding: '8px 16px',
               borderRadius: 100,
-              fontSize: 13,
-              fontWeight: 600,
+              fontSize: 12.5,
+              fontWeight: 700,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
               border: `1.5px solid ${selectedProjectId === null ? 'var(--color-accent)' : 'var(--color-border)'}`,
@@ -551,8 +634,8 @@ export default function FocusTimerPage() {
                   gap: 6,
                   padding: '8px 16px',
                   borderRadius: 100,
-                  fontSize: 13,
-                  fontWeight: 600,
+                  fontSize: 12.5,
+                  fontWeight: 700,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   border: `1.5px solid ${isSelected ? color : 'var(--color-border)'}`,
@@ -575,7 +658,7 @@ export default function FocusTimerPage() {
           onClick={() => setIsRunning(r => !r)}
           style={{
             flex: 1,
-            height: 60,
+            height: 56,
             borderRadius: 100,
             border: 'none',
             background: isRunning
@@ -586,14 +669,14 @@ export default function FocusTimerPage() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: 10,
-            fontSize: 17,
+            fontSize: 16,
             fontWeight: 800,
             fontFamily: "'Outfit', 'Inter', sans-serif",
             letterSpacing: '0.04em',
             cursor: 'pointer',
             boxShadow: isRunning
-              ? '0 6px 24px rgba(245, 158, 11, 0.45)'
-              : '0 8px 30px rgba(99, 102, 241, 0.45)',
+              ? '0 6px 20px rgba(245, 158, 11, 0.4)'
+              : '0 8px 26px rgba(99, 102, 241, 0.45)',
             transition: 'transform 0.15s ease, box-shadow 0.15s ease',
           }}
           onMouseDown={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.98)' }}
@@ -601,12 +684,12 @@ export default function FocusTimerPage() {
         >
           {isRunning ? (
             <>
-              <Pause size={22} fill="white" />
+              <Pause size={20} fill="white" />
               <span>PAUSE</span>
             </>
           ) : (
             <>
-              <Play size={22} fill="white" />
+              <Play size={20} fill="white" />
               <span>START</span>
             </>
           )}
@@ -621,8 +704,8 @@ export default function FocusTimerPage() {
           }}
           className="icon-btn"
           style={{
-            width: 60,
-            height: 60,
+            width: 56,
+            height: 56,
             borderRadius: 100,
             background: 'var(--color-bg-elevated)',
             border: '1.5px solid var(--color-border)',
@@ -630,7 +713,7 @@ export default function FocusTimerPage() {
           }}
           title="Reset Timer"
         >
-          <RotateCcw size={20} />
+          <RotateCcw size={18} />
         </button>
       </div>
 
@@ -641,17 +724,17 @@ export default function FocusTimerPage() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            marginTop: 24,
+            marginTop: 20,
             padding: '8px 18px',
             borderRadius: 100,
             background: 'var(--color-success-muted)',
             border: '1px solid rgba(16, 185, 129, 0.25)',
             color: 'var(--color-success-text)',
-            fontSize: 13,
+            fontSize: 12.5,
             fontWeight: 700,
           }}
         >
-          <Award size={16} />
+          <Award size={15} />
           <span>{completedSessions} focus session{completedSessions === 1 ? '' : 's'} completed today!</span>
         </div>
       )}

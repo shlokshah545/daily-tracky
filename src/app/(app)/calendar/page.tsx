@@ -453,34 +453,34 @@ export default function CalendarPage() {
                           flexDirection: 'column',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          padding: '10px 4px',
+                          padding: '8px 2px',
                           cursor: 'pointer',
-                          background: isSelected ? 'var(--color-accent-muted)' : 'transparent',
-                          transition: 'background 0.15s ease',
+                          background: 'transparent',
                           borderRight: '1px solid var(--color-border)',
                         }}
                       >
                         <div
                           style={{
-                            width: 32,
-                            height: 32,
+                            width: 34,
+                            height: 34,
                             borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: isSelected || isDayToday ? 800 : 600,
-                            fontSize: 14,
+                            fontSize: 13.5,
                             background: isSelected
                               ? 'var(--color-accent)'
                               : isDayToday
-                              ? 'rgba(99, 102, 241, 0.15)'
+                              ? 'var(--color-accent-muted)'
                               : 'transparent',
                             color: isSelected
                               ? '#ffffff'
                               : isDayToday
                               ? 'var(--color-accent-text)'
                               : 'var(--color-text-primary)',
-                            boxShadow: isSelected ? '0 2px 8px rgba(99, 102, 241, 0.4)' : 'none',
+                            boxShadow: isSelected ? '0 3px 10px rgba(99, 102, 241, 0.4)' : 'none',
+                            transition: 'all 0.15s ease',
                           }}
                         >
                           {format(day, 'd')}
@@ -501,7 +501,6 @@ export default function CalendarPage() {
                   {days.map(day => {
                     const dateStr = format(day, 'yyyy-MM-dd')
                     const dayTasks = tasksByDate[dateStr] || []
-                    const isSelected = selectedDate === dateStr
 
                     return (
                       <div
@@ -511,23 +510,24 @@ export default function CalendarPage() {
                           padding: '8px 4px',
                           borderRight: '1px solid var(--color-border)',
                           cursor: 'pointer',
-                          background: isSelected ? 'rgba(99, 102, 241, 0.03)' : 'transparent',
+                          background: 'transparent',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: 4,
+                          gap: 5,
                           minHeight: 100,
                         }}
                       >
-                        {dayTasks.slice(0, 2).map(task => (
+                        {dayTasks.slice(0, 3).map(task => (
                           <div
                             key={task.id}
                             style={{
-                              fontSize: 10,
-                              fontWeight: 600,
-                              padding: '2px 4px',
-                              borderRadius: 4,
+                              fontSize: 9.5,
+                              fontWeight: 700,
+                              padding: '3px 6px',
+                              borderRadius: 100,
                               background: task.status === 'done' ? 'var(--color-success-muted)' : 'var(--color-accent-muted)',
                               color: task.status === 'done' ? 'var(--color-success)' : 'var(--color-accent-text)',
+                              border: `1px solid ${task.status === 'done' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(99, 102, 241, 0.2)'}`,
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                               whiteSpace: 'nowrap',
@@ -547,8 +547,8 @@ export default function CalendarPage() {
                             }}
                             style={{
                               border: '1px dashed var(--color-border)',
-                              borderRadius: 6,
-                              padding: '6px 2px',
+                              borderRadius: 100,
+                              padding: '6px 4px',
                               background: 'transparent',
                               color: 'var(--color-text-tertiary)',
                               fontSize: 9,
@@ -596,11 +596,7 @@ export default function CalendarPage() {
                         borderRight: '1px solid var(--color-border)',
                         borderBottom: '1px solid var(--color-border)',
                         cursor: 'pointer',
-                        background: isSelected
-                          ? 'var(--color-accent-muted)'
-                          : isDayToday
-                          ? 'rgba(99, 102, 241, 0.04)'
-                          : 'transparent',
+                        background: 'transparent',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -609,8 +605,8 @@ export default function CalendarPage() {
                     >
                       <div
                         style={{
-                          width: 28,
-                          height: 28,
+                          width: 30,
+                          height: 30,
                           borderRadius: '50%',
                           display: 'flex',
                           alignItems: 'center',
@@ -620,7 +616,7 @@ export default function CalendarPage() {
                           background: isSelected
                             ? 'var(--color-accent)'
                             : isDayToday
-                            ? 'rgba(99, 102, 241, 0.18)'
+                            ? 'var(--color-accent-muted)'
                             : 'transparent',
                           color: isSelected
                             ? '#ffffff'
@@ -629,7 +625,7 @@ export default function CalendarPage() {
                             : isCurrentMonth
                             ? 'var(--color-text-primary)'
                             : 'var(--color-text-disabled)',
-                          boxShadow: isSelected ? '0 2px 6px rgba(99, 102, 241, 0.4)' : 'none',
+                          boxShadow: isSelected ? '0 3px 10px rgba(99, 102, 241, 0.4)' : 'none',
                         }}
                       >
                         {format(day, 'd')}
