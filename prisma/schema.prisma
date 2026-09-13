@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  status            String    @default("not_started") // not_started | in_progress | done | skipped | overdue
+  priority          String    @default("medium")      // low | medium | high | urgent
+  dueDate           String?   // ISO date string YYYY-MM-DD
+  dueTime           String?   // HH:MM
+  estimatedDuration Int?      // minutes
+  isTimeBlocked     Boolean   @default(false)
+  isRecurring       Boolean   @default(false)
+  recurrenceRule    String?   // JSON: { type: "daily"|"weekly"|"custom", days?: number[], interval?: number }
+  projectId         String?
+  notes             String?
+  completedAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  project   Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  subtasks  Subtask[]
+  tags      TagOnTask[]
+
+  @@index([dueDate])
+  @@index([projectId])
+  @@index([status])
+}
+
+model Subtask {
+  id          String   @id @default(cuid())
+  title       String
+  isCompleted Boolean  @default(false)
+  order       Int      @default(0)
+  taskId      String
+  createdAt   DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  color       String    @default("#7C3AED")
+  icon        String    @default("folder")
+  deadline    String?   // ISO date string
+  status      String    @default("active") // active | on_hold | completed | archived
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tasks Task[]
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String @default("#6B7280")
+
+  tasks TagOnTask[]
+}
+
+model TagOnTask {
+  taskId String
+  tagId  String
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, tagId])
+}
+
+model DailyLog {
+  id             String   @id @default(cuid())
+  date           String   @unique // YYYY-MM-DD
+  tasksCompleted Int      @default(0)
+  tasksTotal     Int      @default(0)
+  isStreakDay    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
