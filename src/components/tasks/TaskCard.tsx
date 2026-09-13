@@ -137,9 +137,16 @@ export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCa
     }
   }
 
+  const priorityBorderColor: Record<string, string> = {
+    urgent: '#ef4444',
+    high: '#f97316',
+    medium: '#3b82f6',
+    low: 'transparent',
+  }
+
   return (
     <div
-      className={`task-row priority-${task.priority}${isDone ? ' done' : ''}`}
+      className={`task-row${isDone ? ' done' : ''}`}
       onClick={() => openTaskModal(task.id)}
       style={{
         opacity: deleting ? 0.3 : isDone ? 0.6 : 1,
@@ -147,8 +154,9 @@ export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCa
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        padding: compact ? '8px 12px' : '14px 18px',
-        gap: showSubtasks && subtasks.length > 0 ? 12 : 0,
+        padding: compact ? '8px 12px' : '12px 16px',
+        borderLeft: `3.5px solid ${priorityBorderColor[task.priority] || 'transparent'}`,
+        gap: showSubtasks && subtasks.length > 0 ? 10 : 0,
       }}
     >
       {/* Main Task Line */}

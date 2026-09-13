@@ -228,19 +228,24 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
         ) : (
           <>
             {/* Title Input */}
-            <div style={{ padding: '18px 24px 0' }}>
+            <div style={{ padding: '16px 20px 0' }}>
               <input
                 autoFocus
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="What needs to be done?"
-                className="input-ghost"
-                style={{ fontSize: 18, fontWeight: 700 }}
+                className="input"
+                style={{
+                  fontSize: 16,
+                  fontWeight: 700,
+                  padding: '11px 14px',
+                  background: 'var(--color-bg-subtle)',
+                }}
               />
             </div>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: 4, padding: '12px 24px 0', borderBottom: '1px solid var(--color-border)' }}>
+            <div style={{ display: 'flex', gap: 4, padding: '10px 20px 0', borderBottom: '1px solid var(--color-border)' }}>
               {(['details', 'subtasks', 'notes'] as const).map(tab => (
                 <button
                   key={tab}
@@ -274,31 +279,34 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
             </div>
 
             {/* Body */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
               {activeTab === 'details' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {/* Priority */}
                   <div>
-                    <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 8 }}>
+                    <label style={{ fontSize: 11.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 8 }}>
                       Priority
                     </label>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                      {PRIORITIES.map(p => (
-                        <button
-                          key={p.value}
-                          type="button"
-                          onClick={() => setPriority(p.value)}
-                          className={`priority-pill priority-pill-${p.value}`}
-                          style={{
-                            opacity: priority === p.value ? 1 : 0.4,
-                            fontWeight: priority === p.value ? 700 : 500,
-                            padding: '5px 14px',
-                            fontSize: 13,
-                          }}
-                        >
-                          {p.label}
-                        </button>
-                      ))}
+                      {PRIORITIES.map(p => {
+                        const isSelected = priority === p.value
+                        return (
+                          <button
+                            key={p.value}
+                            type="button"
+                            onClick={() => setPriority(p.value)}
+                            className={`priority-pill priority-pill-${p.value}`}
+                            style={{
+                              opacity: isSelected ? 1 : 0.45,
+                              fontWeight: isSelected ? 700 : 500,
+                              boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
+                              transform: isSelected ? 'scale(1.02)' : 'none',
+                            }}
+                          >
+                            {p.label}
+                          </button>
+                        )
+                      })}
                     </div>
                   </div>
 

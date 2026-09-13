@@ -122,13 +122,12 @@ export default function TodayPage() {
           1. HERO FOCUS HUB & PRODUCTIVITY CARD
       ══════════════════════════════════════════════════════ */}
       <div
+        className="card"
         style={{
           background: 'linear-gradient(135deg, var(--color-bg-elevated) 0%, var(--color-bg-subtle) 100%)',
-          border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-lg)',
-          padding: '24px 28px',
-          boxShadow: 'var(--shadow-md)',
-          marginBottom: 24,
+          padding: '20px 22px',
+          marginBottom: 20,
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -146,10 +145,10 @@ export default function TodayPage() {
           }}
         />
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           {/* Left Column: Greeting, Date & Motivation */}
-          <div style={{ flex: 1, minWidth: 260 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
               <span
                 style={{
                   display: 'inline-flex',
