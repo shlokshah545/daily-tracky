@@ -208,7 +208,7 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
       className="modal-overlay"
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="modal-box" style={{ maxWidth: 620, maxHeight: '92vh' }}>
+      <div className="modal-box">
         {/* Header */}
         <div className="modal-header">
           <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>
@@ -311,11 +311,9 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                   </div>
 
                   {/* Status & Project */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="form-grid-2">
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
-                        Status
-                      </label>
+                      <label className="form-label">Status</label>
                       <select className="input" value={status} onChange={e => setStatus(e.target.value)}>
                         {STATUSES.map(s => (
                           <option key={s.value} value={s.value}>{s.label}</option>
@@ -323,9 +321,7 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                       </select>
                     </div>
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
-                        Project
-                      </label>
+                      <label className="form-label">Project</label>
                       <select className="input" value={projectId} onChange={e => setProjectId(e.target.value)}>
                         <option value="">No project</option>
                         {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -334,17 +330,13 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                   </div>
 
                   {/* Due Date & Time */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="form-grid-2">
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6 }}>
-                        <Calendar size={13} /> {recurrenceType === 'none' ? 'Due Date' : 'Starting Date'}
-                      </label>
+                      <label className="form-label"><Calendar size={13} /> {recurrenceType === 'none' ? 'Due Date' : 'Starting Date'}</label>
                       <input type="date" className="input" value={dueDate} onChange={e => setDueDate(e.target.value)} />
                     </div>
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6 }}>
-                        <Clock size={13} /> Time
-                      </label>
+                      <label className="form-label"><Clock size={13} /> Time</label>
                       <input type="time" className="input" value={dueTime} onChange={e => setDueTime(e.target.value)} />
                     </div>
                   </div>
@@ -456,11 +448,9 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                   </div>
 
                   {/* Duration & Time Block */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, alignItems: 'center' }}>
+                  <div className="form-grid-2" style={{ alignItems: 'center' }}>
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
-                        Duration (minutes)
-                      </label>
+                      <label className="form-label">Duration (minutes)</label>
                       <input
                         type="number"
                         className="input"
@@ -471,9 +461,7 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                       />
                     </div>
                     <div>
-                      <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
-                        Calendar Options
-                      </label>
+                      <label className="form-label">Calendar Options</label>
                       <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14, color: 'var(--color-text-primary)', fontWeight: 500, height: 40 }}>
                         <button
                           type="button"
@@ -599,36 +587,40 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
             </div>
 
             {/* Footer */}
-            <div className="modal-footer">
-              {isEditing && (
+            <div className="modal-footer" style={{ justifyContent: 'space-between', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {isEditing && (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={async () => {
+                      if (confirm('Delete this task?')) {
+                        await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+                        useUIStore.getState().refreshTasks()
+                        useUIStore.getState().refreshProjects()
+                        onClose()
+                      }
+                    }}
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginLeft: 'auto' }}>
+                <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }} className="hide-mobile">⌘↵ to save</span>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={onClose}>Cancel</button>
                 <button
                   type="button"
-                  className="btn btn-danger"
-                  style={{ marginRight: 'auto' }}
-                  onClick={async () => {
-                    if (confirm('Delete this task?')) {
-                      await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
-                      useUIStore.getState().refreshTasks()
-                      useUIStore.getState().refreshProjects()
-                      onClose()
-                    }
-                  }}
+                  className="btn btn-primary btn-sm"
+                  onClick={handleSave}
+                  disabled={!title.trim() || saving}
                 >
-                  <Trash2 size={15} /> Delete
+                  {saving
+                    ? <Loader2 size={14} style={{ animation: 'spin 0.8s linear infinite' }} />
+                    : <Check size={14} />}
+                  {isEditing ? 'Save' : 'Create'}
                 </button>
-              )}
-              <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleSave}
-                disabled={!title.trim() || saving}
-              >
-                {saving
-                  ? <Loader2 size={15} style={{ animation: 'spin 0.8s linear infinite' }} />
-                  : <Check size={15} />}
-                {isEditing ? 'Save Changes' : 'Create Task'}
-              </button>
+              </div>
             </div>
           </>
         )}

@@ -229,11 +229,9 @@ export function ProjectModal({ projectId, onClose, onSave }: ProjectModalProps) 
             </div>
 
             {/* Deadline & Status */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="form-grid-2">
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
-                  Deadline
-                </label>
+                <label className="form-label">Deadline</label>
                 <input
                   type="date"
                   value={deadline}
@@ -242,9 +240,7 @@ export function ProjectModal({ projectId, onClose, onSave }: ProjectModalProps) 
                 />
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
-                  Status
-                </label>
+                <label className="form-label">Status</label>
                 <select
                   value={status}
                   onChange={e => setStatus(e.target.value)}
@@ -262,32 +258,35 @@ export function ProjectModal({ projectId, onClose, onSave }: ProjectModalProps) 
 
         {/* Footer */}
         {!loading && (
-          <div className="modal-footer">
-            {isEditing && (
+          <div className="modal-footer" style={{ justifyContent: 'space-between' }}>
+            <div>
+              {isEditing && (
+                <button
+                  onClick={async () => {
+                    if (confirm('Delete this project? All tasks will remain but become unlinked.')) {
+                      await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+                      useUIStore.getState().refreshProjects()
+                      useUIStore.getState().refreshTasks()
+                      onClose()
+                    }
+                  }}
+                  className="btn btn-danger btn-sm"
+                >
+                  <Trash2 size={13} /> Delete
+                </button>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <button className="btn btn-ghost btn-sm" onClick={onClose}>Cancel</button>
               <button
-                onClick={async () => {
-                  if (confirm('Delete this project? All tasks will remain but become unlinked.')) {
-                    await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
-                    useUIStore.getState().refreshProjects()
-                    useUIStore.getState().refreshTasks()
-                    onClose()
-                  }
-                }}
-                className="btn btn-danger"
-                style={{ marginRight: 'auto' }}
+                className="btn btn-primary btn-sm"
+                onClick={handleSave}
+                disabled={!name.trim() || saving}
               >
-                <Trash2 size={13} /> Delete
+                {saving ? <Loader2 size={13} style={{ animation: 'spin 0.8s linear infinite' }} /> : <Check size={13} />}
+                {isEditing ? 'Save' : 'Create'}
               </button>
-            )}
-            <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-            <button
-              className="btn btn-primary"
-              onClick={handleSave}
-              disabled={!name.trim() || saving}
-            >
-              {saving ? <Loader2 size={13} style={{ animation: 'spin 0.8s linear infinite' }} /> : <Check size={13} />}
-              {isEditing ? 'Save Changes' : 'Create Project'}
-            </button>
+            </div>
           </div>
         )}
       </div>
