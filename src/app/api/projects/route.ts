@@ -16,7 +16,7 @@ export async function GET() {
     return NextResponse.json({ projects })
   } catch (error) {
     console.error('GET /api/projects error:', error)
-    return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 })
+    return NextResponse.json({ projects: [] }, { status: 200 })
   }
 }
 
@@ -25,9 +25,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { name, description, color, icon, deadline, status, notes } = body
 
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return NextResponse.json({ error: 'Project name is required' }, { status: 400 })
+    }
+
     const project = await prisma.project.create({
       data: {
-        name,
+        name: name.trim(),
         description,
         color: color || '#7C3AED',
         icon: icon || 'folder',

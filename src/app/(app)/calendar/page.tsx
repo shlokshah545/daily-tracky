@@ -197,7 +197,7 @@ export default function CalendarPage() {
 
       {/* Calendar Area */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
-        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '20px 24px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '16px 16px 96px 16px' }}>
           {view === 'month' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, width: '100%' }}>
               {/* Day Headers (7 Equal Columns) */}

@@ -1,51 +1,56 @@
-import type { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Daily Tracker - Personal Productivity',
-    short_name: 'Daily Tracker',
-    description: 'Daily task tracking, calendar view, projects kanban, and analytics.',
+    name: 'Daily Tracky - High Performance Productivity',
+    short_name: 'Daily Tracky',
+    description: 'Track daily habits, tasks, projects, schedules, and analytics with precision.',
     start_url: '/today',
     display: 'standalone',
-    background_color: '#090d16',
+    background_color: '#09090b',
     theme_color: '#6366f1',
-    orientation: 'portrait-primary',
-    categories: ['productivity', 'utilities'],
+    orientation: 'portrait',
     icons: [
       {
         src: '/icons/icon.svg',
-        sizes: '192x192 512x512',
+        sizes: 'any',
         type: 'image/svg+xml',
-        purpose: 'any',
+        purpose: 'maskable',
       },
       {
         src: '/icons/icon.svg',
         sizes: '512x512',
         type: 'image/svg+xml',
-        purpose: 'maskable',
       },
     ],
     shortcuts: [
       {
-        name: "Today's Tasks",
+        name: 'Today Tasks',
         short_name: 'Today',
-        description: "View today's focus and habits",
+        description: 'View today focus tasks',
         url: '/today',
-        icons: [{ src: '/icons/icon.svg', sizes: '192x192' }],
+        icons: [{ src: '/icons/icon.svg', sizes: '96x96' }],
       },
       {
-        name: 'Calendar View',
+        name: 'Calendar',
         short_name: 'Calendar',
-        description: 'View monthly and weekly schedule',
+        description: 'View schedule and timeline',
         url: '/calendar',
-        icons: [{ src: '/icons/icon.svg', sizes: '192x192' }],
+        icons: [{ src: '/icons/icon.svg', sizes: '96x96' }],
       },
       {
-        name: 'Projects Kanban',
+        name: 'Projects',
         short_name: 'Projects',
-        description: 'Manage ongoing project milestones',
+        description: 'Manage active project boards',
         url: '/projects',
-        icons: [{ src: '/icons/icon.svg', sizes: '192x192' }],
+        icons: [{ src: '/icons/icon.svg', sizes: '96x96' }],
+      },
+      {
+        name: 'Stats',
+        short_name: 'Stats',
+        description: 'View productivity statistics',
+        url: '/dashboard',
+        icons: [{ src: '/icons/icon.svg', sizes: '96x96' }],
       },
     ],
   }

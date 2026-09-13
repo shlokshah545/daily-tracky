@@ -17,10 +17,10 @@ export function PWARegister() {
         navigator.serviceWorker
           .register('/sw.js')
           .then((reg) => {
-            console.log('Daily Tracker Service Worker registered:', reg.scope)
+            console.log('Daily Tracky Service Worker registered:', reg.scope)
           })
           .catch((err) => {
-            console.warn('Daily Tracker Service Worker registration failed:', err)
+            console.warn('Daily Tracky Service Worker registration failed:', err)
           })
       } else if ('serviceWorker' in navigator) {
         // Also register in dev if enabled

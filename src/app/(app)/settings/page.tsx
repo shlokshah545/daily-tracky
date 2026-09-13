@@ -167,7 +167,7 @@ export default function SettingsPage() {
           About
         </div>
         <div style={{ fontSize: 13, color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
-          <strong style={{ color: 'var(--color-text-primary)' }}>Daily Tracker</strong> — High Performance Productivity Suite<br />
+          <strong style={{ color: 'var(--color-text-primary)' }}>Daily Tracky</strong> — High Performance Productivity Suite<br />
           Keyboard shortcuts: <code style={{ fontSize: 11, padding: '2px 6px', background: 'var(--color-bg-muted)', borderRadius: 4 }}>Ctrl+K</code> or <code style={{ fontSize: 11, padding: '2px 6px', background: 'var(--color-bg-muted)', borderRadius: 4 }}>⌘K</code> to quick-search anytime.
         </div>
       </div>

@@ -11,13 +11,13 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Daily Tracker',
-  description: 'Personal productivity — tasks, calendar, projects, analytics.',
+  title: 'Daily Tracky',
+  description: 'Daily Tracky — Personal productivity, task management, calendar, projects, and live analytics.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Daily Tracker',
+    title: 'Daily Tracky',
   },
   icons: {
     icon: '/icons/icon.svg',

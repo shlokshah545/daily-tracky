@@ -29,12 +29,15 @@ export function MobileNav() {
         alignItems: 'center',
         justifyContent: 'space-around',
         background: 'var(--color-bg-elevated)',
+        backdropFilter: 'blur(16px)',
         borderTop: '1px solid var(--color-border)',
-        height: 56,
+        height: 'calc(58px + env(safe-area-inset-bottom, 0px))',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        boxShadow: '0 -2px 12px rgba(0,0,0,0.04)',
       }}
     >
       {NAV_ITEMS.slice(0, 2).map(({ href, icon: Icon, label }) => {
-        const isActive = pathname === href || pathname.startsWith(href + '/')
+        const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
         return (
           <Link
             key={href}
@@ -43,15 +46,18 @@ export function MobileNav() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 2,
-              padding: '6px 12px',
+              justifyContent: 'center',
+              gap: 3,
+              padding: '6px 14px',
               textDecoration: 'none',
               color: isActive ? 'var(--color-accent)' : 'var(--color-text-tertiary)',
-              fontSize: 10,
-              fontWeight: 500,
+              fontSize: 10.5,
+              fontWeight: isActive ? 700 : 500,
+              transition: 'color 0.12s ease',
+              minWidth: 52,
             }}
           >
-            <Icon size={18} />
+            <Icon size={19} strokeWidth={isActive ? 2.5 : 1.8} />
             <span>{label}</span>
           </Link>
         )
@@ -60,25 +66,28 @@ export function MobileNav() {
       {/* Center FAB */}
       <button
         onClick={() => openTaskModal()}
+        aria-label="Create new task"
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: 40,
-          height: 40,
+          width: 42,
+          height: 42,
           borderRadius: '50%',
-          background: 'var(--color-accent)',
+          background: 'linear-gradient(135deg, var(--color-accent) 0%, #4f46e5 100%)',
           color: 'white',
           border: 'none',
-          boxShadow: 'var(--shadow-md)',
+          boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)',
           cursor: 'pointer',
+          flexShrink: 0,
+          margin: '-12px 6px 0 6px',
         }}
       >
-        <Plus size={20} />
+        <Plus size={22} strokeWidth={2.5} />
       </button>
 
       {NAV_ITEMS.slice(2).map(({ href, icon: Icon, label }) => {
-        const isActive = pathname === href || pathname.startsWith(href + '/')
+        const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
         return (
           <Link
             key={href}
@@ -87,15 +96,18 @@ export function MobileNav() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 2,
-              padding: '6px 12px',
+              justifyContent: 'center',
+              gap: 3,
+              padding: '6px 14px',
               textDecoration: 'none',
               color: isActive ? 'var(--color-accent)' : 'var(--color-text-tertiary)',
-              fontSize: 10,
-              fontWeight: 500,
+              fontSize: 10.5,
+              fontWeight: isActive ? 700 : 500,
+              transition: 'color 0.12s ease',
+              minWidth: 52,
             }}
           >
-            <Icon size={18} />
+            <Icon size={19} strokeWidth={isActive ? 2.5 : 1.8} />
             <span>{label}</span>
           </Link>
         )

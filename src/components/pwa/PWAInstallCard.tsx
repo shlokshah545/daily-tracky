@@ -82,7 +82,7 @@ export function PWAInstallCard() {
             App Installed & Running
           </div>
           <div style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
-            Daily Tracker is installed on this device.
+            Daily Tracky is installed on this device.
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@ export function PWAInstallCard() {
         }}
       >
         <Download size={15} />
-        {canInstall ? 'Install Daily Tracker' : 'How to Install'}
+        {canInstall ? 'Install Daily Tracky' : 'How to Install'}
       </button>
     </div>
   )

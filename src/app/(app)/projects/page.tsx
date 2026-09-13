@@ -142,12 +142,12 @@ export default function ProjectsPage() {
   return (
     <div className="page-wide">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+      <div className="responsive-header">
         <div>
           <h1 className="page-title">Projects</h1>
           <p className="page-sub">{active.length} active projects</p>
         </div>
-        <button className="btn btn-primary" onClick={() => openProjectModal()}>
+        <button className="btn btn-primary" onClick={() => openProjectModal()} style={{ alignSelf: 'flex-start' }}>
           <Plus size={16} /> New Project
         </button>
       </div>

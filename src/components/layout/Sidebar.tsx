@@ -60,7 +60,7 @@ export function Sidebar() {
         <div className="sidebar-brand-icon">
           <Zap size={16} />
         </div>
-        <span className="sidebar-brand-name">Daily Tracker</span>
+        <span className="sidebar-brand-name">Daily Tracky</span>
         <button
           className="icon-btn"
           style={{ marginLeft: 'auto' }}
