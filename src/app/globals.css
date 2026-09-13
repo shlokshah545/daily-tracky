@@ -1203,3 +1203,24 @@ html.light select option {
   background-color: #ffffff;
   color: #0f172a;
 }
+
+/* ══════════════════════════════════════════════════════
+   TRACKLY-INSPIRED INTERACTIVE ENHANCEMENTS
+══════════════════════════════════════════════════════ */
+.floating-sparkle-fab:hover {
+  transform: scale(1.08) !important;
+  box-shadow: 0 10px 28px rgba(99, 102, 241, 0.65), 0 2px 8px rgba(0,0,0,0.25) !important;
+}
+
+.floating-sparkle-fab:active {
+  transform: scale(0.94) !important;
+}
+
+/* Hide scrollbar for clean horizontal chip containers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

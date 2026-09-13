@@ -42,6 +42,7 @@ export interface Project {
   color: string
   icon: string
   deadline?: string | null
+  targetExamDate?: string | null
   status: 'active' | 'on_hold' | 'completed' | 'archived'
   notes?: string | null
   createdAt: Date

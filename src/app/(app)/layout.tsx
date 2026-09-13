@@ -2,6 +2,7 @@
 
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MobileNav } from '@/components/layout/MobileNav'
+import { AppHeader } from '@/components/layout/AppHeader'
 import { CommandPalette } from '@/components/layout/CommandPalette'
 import { TaskModal } from '@/components/tasks/TaskModal'
 import { ProjectModal } from '@/components/projects/ProjectModal'
@@ -12,7 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg)', position: 'relative' }}>
-      {/* Aurora background blobs — decorative only */}
+      {/* Aurora background blobs — subtle aesthetic ambient glow */}
       <div className="aurora-blob aurora-1" aria-hidden="true" />
       <div className="aurora-blob aurora-2" aria-hidden="true" />
 
@@ -25,23 +26,28 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         @media (min-width: 768px) {
           .desktop-sidebar { display: flex !important; }
           .mobile-bottom-bar { display: none !important; }
+          .floating-sparkle-fab { right: 32px !important; bottom: 32px !important; }
         }
       `}</style>
 
-      {/* Main scroll area */}
-      <main style={{
-        flex: 1,
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        minHeight: 0,
-        background: 'transparent',
-        position: 'relative',
-        zIndex: 1,
-      }}>
-        {children}
-      </main>
+      {/* Main container with Top App Header */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', position: 'relative', zIndex: 1 }}>
+        <AppHeader />
 
-      {/* Mobile bottom nav */}
+        {/* Main scroll area */}
+        <main style={{
+          flex: 1,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          minHeight: 0,
+          background: 'transparent',
+          position: 'relative',
+        }}>
+          {children}
+        </main>
+      </div>
+
+      {/* Mobile bottom nav & floating action button */}
       <div className="mobile-bottom-bar">
         <MobileNav />
       </div>
