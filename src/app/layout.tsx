@@ -3,7 +3,7 @@ import { PWARegister } from '@/components/pwa/PWARegister'
 import './globals.css'
 
 export const viewport: Viewport = {
-  themeColor: '#6366f1',
+  themeColor: '#059669',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
     title: 'Daily Tracky',
   },
   icons: {
-    icon: '/icons/icon.svg',
-    shortcut: '/icons/icon.svg',
-    apple: '/icons/icon.svg',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/icons/icon-192x192.png',
   },
 }
 

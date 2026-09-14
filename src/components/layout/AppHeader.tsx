@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Settings, Sparkles, Flame } from 'lucide-react'
+import { Settings, Sparkles } from 'lucide-react'
 import { useUIStore } from '@/lib/store'
 
 export function AppHeader() {
@@ -37,29 +38,32 @@ export function AppHeader() {
     >
       {/* Brand & Section Name */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        {/* Brand Icon Glyph: Modern geometric T */}
+        {/* User Logo */}
         <Link
           href="/today"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 34,
-            height: 34,
+            width: 36,
+            height: 36,
             borderRadius: 12,
-            background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
-            color: 'white',
-            fontWeight: 900,
-            fontSize: 20,
-            fontFamily: "'Outfit', sans-serif",
+            overflow: 'hidden',
+            boxShadow: '0 2px 10px rgba(16, 185, 129, 0.35)',
             textDecoration: 'none',
-            boxShadow: '0 2px 10px rgba(99, 102, 241, 0.35)',
-            letterSpacing: '-0.04em',
-            lineHeight: 1,
+            flexShrink: 0,
+            background: '#ffffff',
           }}
           title="Daily Tracky"
         >
-          T
+          <Image
+            src="/logo.png"
+            alt="Daily Tracky Logo"
+            width={36}
+            height={36}
+            style={{ objectFit: 'contain' }}
+            priority
+          />
         </Link>
 
         {/* Brand Title & Section Subtitle */}
@@ -101,13 +105,13 @@ export function AppHeader() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 5,
-            padding: '5px 11px',
+            padding: '6px 14px',
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 700,
             borderRadius: 100,
             background: 'var(--color-accent-muted)',
             color: 'var(--color-accent-text)',
-            border: '1px solid rgba(99, 102, 241, 0.2)',
+            border: '1px solid rgba(16, 185, 129, 0.25)',
             cursor: 'pointer',
           }}
           title="Create Task"

@@ -256,7 +256,7 @@ export default function DashboardPage() {
           value={currentData.projects.length}
           sub="active boards"
           icon={FolderKanban}
-          accent="#6366f1"
+          accent="#10b981"
         />
         <StatBox
           label="Overdue"

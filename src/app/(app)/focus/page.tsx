@@ -623,7 +623,7 @@ export default function FocusTimerPage() {
 
           {projects.map(p => {
             const isSelected = selectedProjectId === p.id
-            const color = p.color || '#6366f1'
+            const color = p.color || '#10b981'
             return (
               <button
                 key={p.id}
@@ -663,7 +663,7 @@ export default function FocusTimerPage() {
             border: 'none',
             background: isRunning
               ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-              : 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+              : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
             color: 'white',
             display: 'flex',
             alignItems: 'center',
@@ -676,7 +676,7 @@ export default function FocusTimerPage() {
             cursor: 'pointer',
             boxShadow: isRunning
               ? '0 6px 20px rgba(245, 158, 11, 0.4)'
-              : '0 8px 26px rgba(99, 102, 241, 0.45)',
+              : '0 8px 26px rgba(16, 185, 129, 0.45)',
             transition: 'transform 0.15s ease, box-shadow 0.15s ease',
           }}
           onMouseDown={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.98)' }}

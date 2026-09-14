@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Timer, CalendarDays, FolderKanban, BarChart3,
-  Tag, Settings, Sun, Moon, Plus, PanelLeftClose, PanelLeftOpen, Sparkles
+  Tag, Settings, Sun, Moon, Plus, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react'
 import { useUIStore } from '@/lib/store'
 
@@ -24,7 +25,7 @@ export function Sidebar() {
   if (sidebarCollapsed) {
     return (
       <div style={{
-        width: 60, minWidth: 60,
+        width: 64, minWidth: 64,
         background: 'var(--color-bg-elevated)',
         borderRight: '1px solid var(--color-border)',
         display: 'flex', flexDirection: 'column',
@@ -34,7 +35,14 @@ export function Sidebar() {
         <button className="icon-btn" onClick={() => setSidebarCollapsed(false)} title="Expand Sidebar">
           <PanelLeftOpen size={18} />
         </button>
+        <div style={{ height: 6 }} />
+        
+        {/* Collapsed Logo */}
+        <Link href="/today" style={{ width: 34, height: 34, borderRadius: 10, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff', boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)' }}>
+          <Image src="/logo.png" alt="Logo" width={32} height={32} style={{ objectFit: 'contain' }} priority />
+        </Link>
         <div style={{ height: 8 }} />
+
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/') || (href === '/today' && pathname === '/')
           return (
@@ -42,8 +50,8 @@ export function Sidebar() {
               <div className="icon-btn" style={{
                 color: active ? 'var(--color-accent)' : undefined,
                 background: active ? 'var(--color-accent-muted)' : undefined,
-                width: 38, height: 38,
-                borderRadius: 10,
+                width: 40, height: 40,
+                borderRadius: 12,
               }}>
                 <Icon size={18} />
               </div>
@@ -51,7 +59,7 @@ export function Sidebar() {
           )
         })}
         <div style={{ flex: 1 }} />
-        <button className="icon-btn" onClick={toggleTheme} title="Toggle theme" style={{ width: 38, height: 38 }}>
+        <button className="icon-btn" onClick={toggleTheme} title="Toggle theme" style={{ width: 40, height: 40, borderRadius: 12 }}>
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
       </div>
@@ -62,31 +70,37 @@ export function Sidebar() {
     <div className="sidebar" style={{ background: 'var(--color-bg-elevated)', borderRight: '1px solid var(--color-border)' }}>
       {/* Workspace Brand */}
       <div className="sidebar-brand" style={{ padding: '18px 16px 14px' }}>
-        <div
+        <Link
+          href="/today"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
-            color: 'white',
-            fontWeight: 900,
-            fontSize: 18,
-            fontFamily: "'Outfit', sans-serif",
-            lineHeight: 1,
-            boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            overflow: 'hidden',
+            boxShadow: '0 2px 10px rgba(16, 185, 129, 0.3)',
+            background: '#ffffff',
+            flexShrink: 0,
+            textDecoration: 'none',
           }}
         >
-          T
-        </div>
+          <Image
+            src="/logo.png"
+            alt="Daily Tracky Logo"
+            width={34}
+            height={34}
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </Link>
 
         <span
           className="sidebar-brand-name"
           style={{
             fontFamily: "'Outfit', 'Inter', sans-serif",
-            fontSize: 17,
+            fontSize: 18,
             fontWeight: 800,
             letterSpacing: '-0.02em',
           }}
@@ -96,7 +110,7 @@ export function Sidebar() {
 
         <button
           className="icon-btn"
-          style={{ marginLeft: 'auto' }}
+          style={{ marginLeft: 'auto', borderRadius: 100 }}
           onClick={() => setSidebarCollapsed(true)}
           title="Collapse Sidebar"
         >
@@ -111,15 +125,16 @@ export function Sidebar() {
           className="btn btn-primary"
           style={{
             width: '100%',
-            padding: '10px 14px',
-            fontSize: 13,
+            padding: '10px 16px',
+            fontSize: 13.5,
             fontWeight: 700,
-            borderRadius: 12,
+            borderRadius: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 8,
-            boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
+            background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+            boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
           }}
         >
           <Plus size={16} strokeWidth={2.5} />
@@ -131,7 +146,7 @@ export function Sidebar() {
 
       {/* Main Navigation Links */}
       <div className="sidebar-section" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3, padding: '0 10px' }}>
-        <div className="sidebar-section-label" style={{ paddingLeft: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em' }}>
+        <div className="sidebar-section-label" style={{ paddingLeft: 8, fontSize: 11, fontWeight: 800, letterSpacing: '0.06em' }}>
           MENU
         </div>
         {NAV.map(({ href, label, icon: Icon }) => {
@@ -141,11 +156,13 @@ export function Sidebar() {
               <div
                 className={`nav-item${active ? ' active' : ''}`}
                 style={{
-                  borderRadius: 10,
+                  borderRadius: 12,
                   padding: '9px 12px',
-                  fontWeight: active ? 700 : 500,
+                  fontWeight: active ? 800 : 500,
                   fontSize: 13.5,
                   gap: 10,
+                  color: active ? 'var(--color-accent-text)' : undefined,
+                  background: active ? 'var(--color-accent-muted)' : undefined,
                 }}
               >
                 <Icon size={18} style={{ flexShrink: 0, color: active ? 'var(--color-accent)' : undefined }} />
@@ -163,7 +180,7 @@ export function Sidebar() {
         <button
           className="nav-item"
           onClick={toggleTheme}
-          style={{ width: '100%', borderRadius: 10, padding: '8px 12px', fontSize: 13 }}
+          style={{ width: '100%', borderRadius: 12, padding: '8px 12px', fontSize: 13 }}
         >
           {theme === 'dark'
             ? <Sun size={17} style={{ flexShrink: 0, color: '#f59e0b' }} />
@@ -173,7 +190,7 @@ export function Sidebar() {
         <Link href="/settings" style={{ display: 'block', textDecoration: 'none' }}>
           <div
             className={`nav-item${pathname === '/settings' ? ' active' : ''}`}
-            style={{ borderRadius: 10, padding: '8px 12px', fontSize: 13 }}
+            style={{ borderRadius: 12, padding: '8px 12px', fontSize: 13 }}
           >
             <Settings size={17} style={{ flexShrink: 0 }} />
             <span>Settings</span>

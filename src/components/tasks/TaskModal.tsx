@@ -153,13 +153,20 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        alert('Could not save task: ' + (errData.error || res.statusText))
+        setSaving(false)
+        return
+      }
       const data = await res.json()
       useUIStore.getState().refreshTasks()
       useUIStore.getState().refreshProjects()
       onSave?.(data.task)
       onClose()
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err)
+      alert('Error connecting to server. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -595,10 +602,19 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                     className="btn btn-danger btn-sm"
                     onClick={async () => {
                       if (confirm('Delete this task?')) {
-                        await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
-                        useUIStore.getState().refreshTasks()
-                        useUIStore.getState().refreshProjects()
-                        onClose()
+                        try {
+                          const res = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+                          if (!res.ok) {
+                            const errData = await res.json().catch(() => ({}))
+                            alert('Could not delete task: ' + (errData.error || res.statusText))
+                            return
+                          }
+                          useUIStore.getState().refreshTasks()
+                          useUIStore.getState().refreshProjects()
+                          onClose()
+                        } catch {
+                          alert('Error deleting task. Please try again.')
+                        }
                       }
                     }}
                   >

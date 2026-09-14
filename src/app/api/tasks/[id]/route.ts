@@ -35,10 +35,12 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       tags, subtasks, completedAt,
     } = body
 
-    // Handle tag updates: delete all, recreate
-    await prisma.tagOnTask.deleteMany({ where: { taskId: id } })
+    // Handle tag updates only if tags was explicitly provided
+    if (tags !== undefined) {
+      await prisma.tagOnTask.deleteMany({ where: { taskId: id } })
+    }
 
-    // Handle subtask updates
+    // Handle subtask updates only if subtasks was explicitly provided
     if (subtasks !== undefined) {
       await prisma.subtask.deleteMany({ where: { taskId: id } })
     }
@@ -85,15 +87,20 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       },
     })
 
-    // Update daily log if status or date changed
+    // Update daily log safely if status or date changed
     if (status !== undefined || dueDate !== undefined) {
-      await upsertDailyLog(task.dueDate || new Date().toISOString().split('T')[0])
+      try {
+        await upsertDailyLog(task.dueDate || new Date().toISOString().split('T')[0])
+      } catch (e) {
+        console.warn('upsertDailyLog failed in PUT:', e)
+      }
     }
 
     return NextResponse.json({ task })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('PUT /api/tasks/[id] error:', error)
-    return NextResponse.json({ error: 'Failed to update task' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Failed to update task'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 
@@ -105,12 +112,19 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
 
     await prisma.task.delete({ where: { id } })
 
-    if (task.dueDate) await upsertDailyLog(task.dueDate)
+    if (task.dueDate) {
+      try {
+        await upsertDailyLog(task.dueDate)
+      } catch (e) {
+        console.warn('upsertDailyLog failed in DELETE:', e)
+      }
+    }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('DELETE /api/tasks/[id] error:', error)
-    return NextResponse.json({ error: 'Failed to delete task' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Failed to delete task'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 

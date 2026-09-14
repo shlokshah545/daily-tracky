@@ -9,40 +9,40 @@
 /* ─── DARK MODE TOKENS (Default) ─── */
 :root,
 html.dark {
-  /* Backgrounds — Slate-950/900/800 palette */
-  --bg:           #020617;   /* Slate-950 */
-  --bg-card:      #0f172a;   /* Slate-900 */
-  --bg-elevated:  #1e293b;   /* Slate-800 */
-  --bg-muted:     #334155;   /* Slate-700 */
-  --bg-hover:     #1e293b;
+  /* Backgrounds — Deep Forest Emerald Midnight */
+  --bg:           #041611;   /* Deep emerald midnight */
+  --bg-card:      #09251c;   /* Rich forest dark card */
+  --bg-elevated:  #0f3529;   /* Elevated surface */
+  --bg-muted:     #164a39;   /* Slate/emerald muted */
+  --bg-hover:     #123e30;
 
   /* Borders */
-  --border:       #1e293b;
-  --border-strong: #334155;
+  --border:       #143d2f;
+  --border-strong: #1d5240;
 
   /* Text */
-  --text-1:       #f8fafc;   /* Slate-50 */
-  --text-2:       #cbd5e1;   /* Slate-300 */
-  --text-3:       #94a3b8;   /* Slate-400 */
-  --text-4:       #64748b;   /* Slate-500 */
-  --text-disabled: #334155;
+  --text-1:       #f0fdf4;   /* Mint-white */
+  --text-2:       #dcfce7;   /* Light mint */
+  --text-3:       #86efac;   /* Soft sage/emerald */
+  --text-4:       #4ade80;   /* Muted green */
+  --text-disabled: #1d4d3d;
 
-  /* Accent */
-  --accent:       #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-muted: rgba(99, 102, 241, 0.12);
-  --accent-text:  #a5b4fc;   /* Indigo-300 */
-  --accent-glow:  rgba(99, 102, 241, 0.25);
+  /* Accent — Emerald from Logo */
+  --accent:       #10b981;
+  --accent-hover: #059669;
+  --accent-muted: rgba(16, 185, 129, 0.16);
+  --accent-text:  #34d399;
+  --accent-glow:  rgba(16, 185, 129, 0.35);
 
   /* Semantic */
   --success:      #10b981;
-  --success-muted: rgba(16,185,129,0.12);
+  --success-muted: rgba(16,185,129,0.14);
   --success-text: #34d399;
   --warning:      #f59e0b;
-  --warning-muted: rgba(245,158,11,0.12);
+  --warning-muted: rgba(245,158,11,0.14);
   --warning-text: #fbbf24;
   --danger:       #ef4444;
-  --danger-muted: rgba(239,68,68,0.12);
+  --danger-muted: rgba(239,68,68,0.14);
   --danger-text:  #f87171;
 
   /* Layout */
@@ -59,31 +59,31 @@ html.dark {
   --shadow-md:  0 4px 16px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
   --shadow-lg:  0 12px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.4);
   --shadow-xl:  0 24px 64px rgba(0,0,0,0.7), 0 8px 24px rgba(0,0,0,0.5);
-  --shadow-accent: 0 4px 20px rgba(99,102,241,0.35), 0 0 0 1px rgba(99,102,241,0.2);
+  --shadow-accent: 0 4px 20px rgba(16,185,129,0.35), 0 0 0 1px rgba(16,185,129,0.2);
 }
 
 /* ─── LIGHT MODE TOKENS ─── */
 html.light {
-  --bg:           #f8fafc;   /* Slate-50 */
+  --bg:           #f6faf7;   /* Crisp fresh mint-white */
   --bg-card:      #ffffff;
-  --bg-elevated:  #f1f5f9;   /* Slate-100 */
-  --bg-muted:     #e2e8f0;   /* Slate-200 */
-  --bg-hover:     #f1f5f9;
+  --bg-elevated:  #eef6f1;   /* Soft sage surface */
+  --bg-muted:     #e0efe6;   /* Muted border fill */
+  --bg-hover:     #e7f4ec;
 
-  --border:       #e2e8f0;   /* Slate-200 */
-  --border-strong: #cbd5e1;  /* Slate-300 */
+  --border:       #e1ece5;   /* Crisp clean border */
+  --border-strong: #c7ddcf;  /* Stronger division */
 
-  --text-1:       #0f172a;   /* Slate-900 */
-  --text-2:       #1e293b;   /* Slate-800 */
-  --text-3:       #475569;   /* Slate-600 */
-  --text-4:       #94a3b8;   /* Slate-400 */
-  --text-disabled: #cbd5e1;
+  --text-1:       #0d271c;   /* Forest dark green-black */
+  --text-2:       #153d2d;   /* Deep forest */
+  --text-3:       #2b684e;   /* Medium forest */
+  --text-4:       #4e876c;   /* Muted green-gray */
+  --text-disabled: #a0c4b1;
 
-  --accent:       #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-muted: #eef2ff;
-  --accent-text:  #4338ca;
-  --accent-glow:  rgba(99, 102, 241, 0.15);
+  --accent:       #059669;   /* Rich Emerald */
+  --accent-hover: #047857;
+  --accent-muted: #ecfdf5;
+  --accent-text:  #047857;
+  --accent-glow:  rgba(5, 150, 105, 0.2);
 
   --success:      #059669;
   --success-muted: #ecfdf5;
@@ -95,11 +95,11 @@ html.light {
   --danger-muted: #fef2f2;
   --danger-text:  #dc2626;
 
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
-  --shadow-lg:  0 12px 40px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.06);
-  --shadow-xl:  0 24px 60px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.07);
-  --shadow-accent: 0 4px 20px rgba(99,102,241,0.25), 0 0 0 1px rgba(99,102,241,0.15);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-md:  0 4px 16px rgba(5,150,105,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --shadow-lg:  0 12px 40px rgba(5,150,105,0.10), 0 4px 14px rgba(0,0,0,0.05);
+  --shadow-xl:  0 24px 60px rgba(5,150,105,0.12), 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-accent: 0 4px 20px rgba(5,150,105,0.25), 0 0 0 1px rgba(5,150,105,0.15);
 }
 
 /* Backwards-compat aliases */
@@ -163,7 +163,7 @@ html.light {
   height: 600px;
   top: -200px;
   right: -100px;
-  background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%);
   animation: aurora-1 22s ease-in-out infinite;
 }
 
@@ -172,15 +172,15 @@ html.light {
   height: 500px;
   bottom: -150px;
   left: -100px;
-  background: radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(5,150,105,0.14) 0%, transparent 70%);
   animation: aurora-2 28s ease-in-out infinite;
 }
 
 /* Hide aurora in light mode (subtle is enough via shadow) */
 html.light .aurora-1,
 html.light .aurora-2 {
-  opacity: 0.4;
-  background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -557,7 +557,7 @@ html.light .sidebar {
 .sidebar-brand-icon {
   width: 30px;
   height: 30px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: linear-gradient(135deg, #059669, #10b981);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -656,13 +656,13 @@ html.light .nav-item.active {
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .btn-primary {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: linear-gradient(135deg, #059669, #10b981);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+  box-shadow: 0 2px 10px rgba(16,185,129,0.3);
 }
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4f46e5, #4338ca);
-  box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+  background: linear-gradient(135deg, #047857, #059669);
+  box-shadow: 0 4px 16px rgba(16,185,129,0.45);
   transform: translateY(-1px);
 }
 
@@ -1003,16 +1003,16 @@ html.light .priority-pill-medium { background: #dbeafe; color: #2563eb; border-c
 .progress-fill.green { background: var(--success); }
 
 .hm-0 { background: var(--bg-elevated); }
-.hm-1 { background: rgba(99,102,241,0.3); }
-.hm-2 { background: rgba(99,102,241,0.55); }
-.hm-3 { background: #6366f1; }
-.hm-4 { background: #4f46e5; }
+.hm-1 { background: rgba(16,185,129,0.3); }
+.hm-2 { background: rgba(16,185,129,0.55); }
+.hm-3 { background: #10b981; }
+.hm-4 { background: #059669; }
 
-html.light .hm-0 { background: #e2e8f0; }
-html.light .hm-1 { background: #c7d2fe; }
-html.light .hm-2 { background: #818cf8; }
-html.light .hm-3 { background: #6366f1; }
-html.light .hm-4 { background: #4338ca; }
+html.light .hm-0 { background: #e0efe6; }
+html.light .hm-1 { background: #a7f3d0; }
+html.light .hm-2 { background: #34d399; }
+html.light .hm-3 { background: #10b981; }
+html.light .hm-4 { background: #059669; }
 
 /* ══════════════════════════════════════════════════════
    ICON BUTTONS & TABS

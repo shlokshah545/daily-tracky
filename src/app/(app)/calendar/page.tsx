@@ -235,7 +235,7 @@ export default function CalendarPage() {
                         width: 12,
                         height: 12,
                         borderRadius: '50%',
-                        background: proj.color || '#6366f1',
+                        background: proj.color || '#10b981',
                       }}
                     />
                     <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--color-text-primary)' }}>
@@ -261,7 +261,7 @@ export default function CalendarPage() {
                           height: '100%',
                           width: `${pct}%`,
                           borderRadius: 100,
-                          background: proj.color || '#6366f1',
+                          background: proj.color || '#10b981',
                           transition: 'width 0.4s ease',
                         }}
                       />
