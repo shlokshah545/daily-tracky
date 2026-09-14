@@ -14,12 +14,12 @@ import { TaskQuickAdd } from '@/components/tasks/TaskQuickAdd'
 import { useUIStore } from '@/lib/store'
 import { mergeWithLocalTasks } from '@/lib/clientData'
 import type { Task } from '@/types'
-import { isTaskScheduledForDate } from '@/lib/recurrence'
+import { isTaskScheduledForDate, isTaskCompletedOnDate } from '@/lib/recurrence'
 
 type CalendarView = 'today' | 'week' | 'month'
 
-function CalendarTaskChip({ task, onClick }: { task: Task; onClick: () => void }) {
-  const isDone = task.status === 'done'
+function CalendarTaskChip({ task, dateStr, onClick }: { task: Task; dateStr?: string; onClick: () => void }) {
+  const isDone = dateStr ? isTaskCompletedOnDate(task, dateStr) : task.status === 'done'
   const isOverdue = task.status === 'overdue'
 
   const bg = isDone
@@ -318,6 +318,7 @@ export default function CalendarPage() {
                 <TaskCard
                   key={task.id}
                   task={task}
+                  currentDate={format(currentDate, 'yyyy-MM-dd')}
                   onComplete={handleTaskComplete}
                   onDelete={handleTaskDelete}
                 />
@@ -342,7 +343,7 @@ export default function CalendarPage() {
             const dateStr = format(day, 'yyyy-MM-dd')
             const dayTasks = tasksByDate[dateStr] || []
             const isDayToday = isToday(day)
-            const doneCount = dayTasks.filter(t => t.status === 'done').length
+            const doneCount = dayTasks.filter(t => isTaskCompletedOnDate(t, dateStr)).length
 
             return (
               <div
@@ -453,6 +454,7 @@ export default function CalendarPage() {
                       <TaskCard
                         key={task.id}
                         task={task}
+                        currentDate={dateStr}
                         compact
                         onComplete={handleTaskComplete}
                         onDelete={handleTaskDelete}
@@ -519,7 +521,7 @@ export default function CalendarPage() {
                 const isSelected = selectedDate === dateStr
                 const dayTasks = tasksByDate[dateStr] || []
                 const hasOverdue = dayTasks.some(t => t.status === 'overdue')
-                const allDone = dayTasks.length > 0 && dayTasks.every(t => t.status === 'done')
+                const allDone = dayTasks.length > 0 && dayTasks.every(t => isTaskCompletedOnDate(t, dateStr))
 
                 return (
                   <div
@@ -590,6 +592,7 @@ export default function CalendarPage() {
                         <CalendarTaskChip
                           key={task.id}
                           task={task}
+                          dateStr={dateStr}
                           onClick={() => openTaskModal(task.id)}
                         />
                       ))}
@@ -659,6 +662,7 @@ export default function CalendarPage() {
                   <TaskCard
                     key={task.id}
                     task={task}
+                    currentDate={selectedDate}
                     onComplete={handleTaskComplete}
                     onDelete={handleTaskDelete}
                   />

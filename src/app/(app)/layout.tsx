@@ -9,7 +9,10 @@ import { ProjectModal } from '@/components/projects/ProjectModal'
 import { useUIStore } from '@/lib/store'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { taskModalOpen, closeTaskModal, taskModalId, projectModalOpen, closeProjectModal, projectModalId } = useUIStore()
+  const {
+    taskModalOpen, closeTaskModal, taskModalId, taskModalProjectId,
+    projectModalOpen, closeProjectModal, projectModalId,
+  } = useUIStore()
 
   return (
     <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg)', position: 'relative' }}>
@@ -54,7 +57,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Global overlays */}
       <CommandPalette />
-      {taskModalOpen && <TaskModal taskId={taskModalId} onClose={closeTaskModal} />}
+      {taskModalOpen && <TaskModal taskId={taskModalId} initialProjectId={taskModalProjectId} onClose={closeTaskModal} />}
       {projectModalOpen && <ProjectModal projectId={projectModalId} onClose={closeProjectModal} />}
     </div>
   )

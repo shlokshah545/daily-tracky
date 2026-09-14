@@ -11,6 +11,7 @@ import { recordNewTask, recordTaskUpdate, markTaskAsDeleted } from '@/lib/client
 interface TaskModalProps {
   taskId?: string | null
   initialDate?: string
+  initialProjectId?: string | null
   onClose: () => void
   onSave?: (task: Task) => void
 }
@@ -37,7 +38,7 @@ const RECURRENCE_PRESETS = [
   { id: 'custom',   label: 'Specific days...' },
 ] as const
 
-export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalProps) {
+export function TaskModal({ taskId, initialDate, initialProjectId, onClose, onSave }: TaskModalProps) {
   const isEditing = !!taskId
   const [loading, setLoading]   = useState(isEditing)
   const [saving, setSaving]     = useState(false)
@@ -53,7 +54,7 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
   const [isTimeBlocked, setIsTimeBlocked] = useState(false)
   const [recurrenceType, setRecurrenceType] = useState<'none' | 'daily' | 'weekdays' | 'weekends' | 'custom'>('none')
   const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5])
-  const [projectId, setProjectId]     = useState('')
+  const [projectId, setProjectId]     = useState(initialProjectId || '')
   const [notes, setNotes]             = useState('')
   const [subtasks, setSubtasks]       = useState<{ title: string; isCompleted: boolean }[]>([])
   const [newSubtask, setNewSubtask]   = useState('')
@@ -177,7 +178,7 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
           if (isEditing) {
             recordTaskUpdate(taskId!, data.task)
           } else {
-            recordNewTask(data.task)
+            recordNewTask(data.task, tempId)
           }
         }
       }
@@ -511,6 +512,26 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                         Time blocked slot
                       </label>
                     </div>
+                  </div>
+
+                  {/* Project Board Selection */}
+                  <div>
+                    <label style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', display: 'block', marginBottom: 6 }}>
+                      Project Board
+                    </label>
+                    <select
+                      className="input"
+                      value={projectId}
+                      onChange={e => setProjectId(e.target.value)}
+                      style={{ cursor: 'pointer', width: '100%', height: 42, background: 'var(--color-bg-subtle)' }}
+                    >
+                      <option value="">None (General / Unassigned)</option>
+                      {projects.map(p => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   {/* Tags */}

@@ -7,7 +7,12 @@ import { formatRecurrenceLabel } from '@/lib/recurrence'
 import { useUIStore } from '@/lib/store'
 import { recordNewTask } from '@/lib/clientData'
 
-interface Props { defaultDate?: string; onAdd?: () => void; placeholder?: string }
+interface Props {
+  defaultDate?: string
+  defaultProjectId?: string
+  onAdd?: () => void
+  placeholder?: string
+}
 
 function formatDateShort(d: string) {
   const dt = new Date(d + 'T00:00')
@@ -25,7 +30,7 @@ function formatTimePretty(t: string) {
   return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
 }
 
-export function TaskQuickAdd({ defaultDate, onAdd, placeholder }: Props) {
+export function TaskQuickAdd({ defaultDate, defaultProjectId, onAdd, placeholder }: Props) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [flash, setFlash] = useState(false)
@@ -44,6 +49,7 @@ export function TaskQuickAdd({ defaultDate, onAdd, placeholder }: Props) {
       dueTime: parsed?.dueTime || null,
       isRecurring: parsed?.isRecurring || false,
       recurrenceRule: parsed?.recurrenceRule ? JSON.stringify(parsed.recurrenceRule) : null,
+      projectId: defaultProjectId || null,
       status: 'not_started',
     }
     const tempId = `local_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
@@ -72,7 +78,7 @@ export function TaskQuickAdd({ defaultDate, onAdd, placeholder }: Props) {
       if (res.ok) {
         const data = await res.json()
         if (data?.task) {
-          recordNewTask(data.task)
+          recordNewTask(data.task, tempId)
         }
       }
     } catch (err) {

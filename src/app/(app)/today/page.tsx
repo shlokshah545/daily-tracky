@@ -14,6 +14,7 @@ import { TaskCard } from '@/components/tasks/TaskCard'
 import { TaskQuickAdd } from '@/components/tasks/TaskQuickAdd'
 import { useUIStore } from '@/lib/store'
 import { mergeWithLocalTasks } from '@/lib/clientData'
+import { isTaskCompletedOnDate } from '@/lib/recurrence'
 import type { Task, Project } from '@/types'
 
 type StandingPeriod = 'today' | 'week' | 'month'
@@ -66,18 +67,19 @@ export default function TodayPage() {
     fetchData()
   }, [fetchData, tasksVersion, projectsVersion])
 
-  const done = tasks.filter(t => t.status === 'done')
-  const active = tasks.filter(t => t.status !== 'done')
+  const isCompletedToday = (t: Task) => isTaskCompletedOnDate(t, todayStr)
+  const done = tasks.filter(isCompletedToday)
+  const active = tasks.filter(t => !isCompletedToday(t))
 
   const isDueToday = (t: Task) => t.dueDate === todayStr || (!t.dueDate && !t.isRecurring)
   const isFutureDue = (t: Task) => !!(t.dueDate && t.dueDate > todayStr && !t.isRecurring)
   const isPastDue = (t: Task) => !!(t.dueDate && t.dueDate < todayStr && !t.isRecurring)
 
-  const timeBlock = tasks.filter(t => t.dueTime && isDueToday(t) && t.status !== 'done')
-  const todayTasks = tasks.filter(t => !t.dueTime && isDueToday(t) && !t.isRecurring && t.status !== 'done')
-  const ongoingProjects = tasks.filter(t => isFutureDue(t) && t.status !== 'done')
-  const overdueTasks = tasks.filter(t => isPastDue(t) && t.status !== 'done')
-  const recurring = tasks.filter(t => t.isRecurring && t.status !== 'done')
+  const timeBlock = tasks.filter(t => t.dueTime && isDueToday(t) && !isCompletedToday(t))
+  const todayTasks = tasks.filter(t => !t.dueTime && isDueToday(t) && !t.isRecurring && !isCompletedToday(t))
+  const ongoingProjects = tasks.filter(t => isFutureDue(t) && !isCompletedToday(t))
+  const overdueTasks = tasks.filter(t => isPastDue(t) && !isCompletedToday(t))
+  const recurring = tasks.filter(t => t.isRecurring && !isCompletedToday(t))
 
   const total = tasks.length
   const pct = total > 0 ? Math.round((done.length / total) * 100) : 0
@@ -526,8 +528,9 @@ export default function TodayPage() {
               <TaskCard
                 key={t.id}
                 task={t}
+                currentDate={todayStr}
                 onComplete={id => {
-                  setTasks(p => p.map(x => (x.id === id ? { ...x, status: 'done' } : x)))
+                  fetchData()
                 }}
                 onDelete={id => {
                   setTasks(p => p.filter(x => x.id !== id))
@@ -571,8 +574,9 @@ export default function TodayPage() {
                     <TaskCard
                       key={t.id}
                       task={t}
+                      currentDate={todayStr}
                       onComplete={id => {
-                        setTasks(p => p.map(x => (x.id === id ? { ...x, status: 'not_started' } : x)))
+                        fetchData()
                       }}
                       onDelete={id => {
                         setTasks(p => p.filter(x => x.id !== id))

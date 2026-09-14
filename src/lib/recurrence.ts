@@ -1,6 +1,9 @@
+import { getRecurringCompletedDates, setRecurringCompletedDate } from '@/lib/clientData'
+
 export interface RecurrenceRule {
   type: 'none' | 'daily' | 'weekdays' | 'weekends' | 'custom' | 'weekly'
   days?: number[] // 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
+  completedDates?: string[] // ['YYYY-MM-DD']
 }
 
 export const DAY_OPTIONS = [
@@ -12,6 +15,84 @@ export const DAY_OPTIONS = [
   { label: 'S', fullLabel: 'Sat', dayIndex: 6 },
   { label: 'S', fullLabel: 'Sun', dayIndex: 0 },
 ]
+
+/**
+ * Checks whether a task is completed on a specific target date (YYYY-MM-DD).
+ * For recurring tasks, checks whether that individual date was completed.
+ * For one-off tasks, checks standard task status.
+ */
+export function isTaskCompletedOnDate(
+  task: {
+    id?: string
+    isRecurring: boolean
+    recurrenceRule?: string | null
+    status?: string
+  },
+  targetDateStr: string
+): boolean {
+  if (!task.isRecurring) {
+    return task.status === 'done'
+  }
+
+  // Check recurrenceRule JSON
+  if (task.recurrenceRule) {
+    try {
+      const rule: RecurrenceRule = typeof task.recurrenceRule === 'string'
+        ? JSON.parse(task.recurrenceRule)
+        : task.recurrenceRule
+      if (rule?.completedDates && Array.isArray(rule.completedDates) && rule.completedDates.includes(targetDateStr)) {
+        return true
+      }
+    } catch {}
+  }
+
+  // Check persistent local storage tracking
+  if (task.id) {
+    const localCompleted = getRecurringCompletedDates(task.id)
+    if (localCompleted.includes(targetDateStr)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * Toggles completion of a recurring task for a specific individual date.
+ */
+export function toggleRecurringDateCompletion(
+  task: {
+    id: string
+    recurrenceRule?: string | RecurrenceRule | null
+  },
+  targetDateStr: string
+): { updatedRuleJson: string; isCompleted: boolean } {
+  let rule: RecurrenceRule = { type: 'daily', completedDates: [] }
+  if (task.recurrenceRule) {
+    try {
+      rule = typeof task.recurrenceRule === 'string'
+        ? JSON.parse(task.recurrenceRule)
+        : { ...(task.recurrenceRule as object) as RecurrenceRule }
+    } catch {}
+  }
+
+  const currentDates = new Set(rule.completedDates || [])
+  const isNowCompleted = !currentDates.has(targetDateStr)
+
+  if (isNowCompleted) {
+    currentDates.add(targetDateStr)
+  } else {
+    currentDates.delete(targetDateStr)
+  }
+
+  rule.completedDates = Array.from(currentDates)
+  setRecurringCompletedDate(task.id, targetDateStr, isNowCompleted)
+
+  return {
+    updatedRuleJson: JSON.stringify(rule),
+    isCompleted: isNowCompleted,
+  }
+}
 
 /**
  * Checks whether a given task is scheduled to appear on a target date (YYYY-MM-DD).

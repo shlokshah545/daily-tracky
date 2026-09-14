@@ -65,7 +65,7 @@ function KanbanCol({ column, tasks, onTaskComplete, onTaskDelete, onAddTask, pro
           </span>
         </div>
         <button
-          onClick={() => openTaskModal()}
+          onClick={() => openTaskModal(null, projectId)}
           className="icon-btn"
           title="Add task to column"
         >
@@ -137,7 +137,7 @@ export default function ProjectDetailPage({ params }: PageProps) {
       if (data.project) {
         setProject({
           ...data.project,
-          tasks: mergeWithLocalTasks(data.project.tasks || []),
+          tasks: mergeWithLocalTasks(data.project.tasks || [], { projectId: id }),
         })
       }
     } catch (err) {
@@ -296,7 +296,11 @@ export default function ProjectDetailPage({ params }: PageProps) {
       {/* Quick Add Bar & Mobile Column Switcher */}
       <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-subtle)' }}>
         <div style={{ maxWidth: 640, marginBottom: 8 }}>
-          <TaskQuickAdd onAdd={fetchProject} placeholder={`Add task to ${project.name}...`} />
+          <TaskQuickAdd
+            defaultProjectId={project.id}
+            onAdd={fetchProject}
+            placeholder={`Add task to ${project.name}...`}
+          />
         </div>
 
         {/* Mobile Column Tabs */}

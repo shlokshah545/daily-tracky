@@ -8,12 +8,12 @@ import {
 import { format } from 'date-fns'
 import { useUIStore } from '@/lib/store'
 import type { Task, Subtask } from '@/types'
-import { formatRecurrenceLabel } from '@/lib/recurrence'
-
+import { formatRecurrenceLabel, isTaskCompletedOnDate, toggleRecurringDateCompletion } from '@/lib/recurrence'
 import { markTaskAsDeleted, recordTaskUpdate } from '@/lib/clientData'
 
 interface TaskCardProps {
   task: Task
+  currentDate?: string
   onComplete?: (id: string) => void
   onDelete?: (id: string) => void
   compact?: boolean
@@ -26,13 +26,16 @@ const PRIORITY_BADGE: Record<string, string> = {
   low:    'badge badge-low',
 }
 
-export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCardProps) {
+export function TaskCard({ task, currentDate, onComplete, onDelete, compact = false }: TaskCardProps) {
   const [completing, setCompleting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showSubtasks, setShowSubtasks] = useState(false)
   const [subtasks, setSubtasks] = useState<Subtask[]>(task.subtasks || [])
   const { openTaskModal } = useUIStore()
-  const isDone = task.status === 'done'
+
+  const isDone = currentDate
+    ? isTaskCompletedOnDate(task, currentDate)
+    : task.status === 'done'
 
   useEffect(() => {
     setSubtasks(task.subtasks || [])
@@ -42,6 +45,26 @@ export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCa
     e.stopPropagation()
     if (completing) return
     setCompleting(true)
+
+    // For recurring tasks, toggle completion strictly for this individual date
+    if (task.isRecurring && currentDate) {
+      const { updatedRuleJson } = toggleRecurringDateCompletion(task, currentDate)
+      recordTaskUpdate(task.id, { recurrenceRule: updatedRuleJson })
+      onComplete?.(task.id)
+      try {
+        await fetch(`/api/tasks/${task.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recurrenceRule: updatedRuleJson }),
+        })
+        useUIStore.getState().refreshTasks()
+        useUIStore.getState().refreshProjects()
+      } finally {
+        setCompleting(false)
+      }
+      return
+    }
+
     const newStatus = isDone ? 'not_started' : 'done'
     recordTaskUpdate(task.id, { status: newStatus, completedAt: newStatus === 'done' ? new Date() : null })
     onComplete?.(task.id)

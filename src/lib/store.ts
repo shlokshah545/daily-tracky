@@ -28,6 +28,7 @@ interface UIState {
   theme: Theme
   taskModalOpen: boolean
   taskModalId: string | null
+  taskModalProjectId: string | null
   projectModalOpen: boolean
   projectModalId: string | null
 
@@ -40,7 +41,7 @@ interface UIState {
   setCommandPaletteOpen: (v: boolean) => void
   setSelectedDate: (date: string) => void
   toggleTheme: () => void
-  openTaskModal: (id?: string) => void
+  openTaskModal: (id?: string | null, projectId?: string | null) => void
   closeTaskModal: () => void
   openProjectModal: (id?: string) => void
   closeProjectModal: () => void
@@ -59,6 +60,7 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   taskModalOpen: false,
   taskModalId: null,
+  taskModalProjectId: null,
   projectModalOpen: false,
   projectModalId: null,
 
@@ -76,8 +78,8 @@ export const useUIStore = create<UIState>((set, get) => ({
     set({ theme: next })
   },
 
-  openTaskModal: (id) => set({ taskModalOpen: true, taskModalId: id ?? null }),
-  closeTaskModal: () => set({ taskModalOpen: false, taskModalId: null }),
+  openTaskModal: (id, projectId) => set({ taskModalOpen: true, taskModalId: id ?? null, taskModalProjectId: projectId ?? null }),
+  closeTaskModal: () => set({ taskModalOpen: false, taskModalId: null, taskModalProjectId: null }),
   openProjectModal: (id) => set({ projectModalOpen: true, projectModalId: id ?? null }),
   closeProjectModal: () => set({ projectModalOpen: false, projectModalId: null }),
 
