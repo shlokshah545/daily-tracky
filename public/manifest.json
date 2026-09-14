@@ -3,23 +3,39 @@
   "short_name": "Daily Tracky",
   "description": "Track daily habits, tasks, projects, schedules, and analytics with precision.",
   "start_url": "/today",
+  "id": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#6366f1",
-  "orientation": "portrait",
-  "categories": ["productivity", "utilities"],
+  "background_color": "#041611",
+  "theme_color": "#059669",
+  "orientation": "any",
+  "dir": "ltr",
+  "lang": "en",
+  "categories": ["productivity", "utilities", "lifestyle"],
   "icons": [
     {
-      "src": "/icons/icon.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/icons/icon.svg",
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
@@ -28,28 +44,28 @@
       "short_name": "Today",
       "description": "View today focus tasks",
       "url": "/today",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Calendar",
       "short_name": "Calendar",
       "description": "View schedule and timeline",
       "url": "/calendar",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Projects",
       "short_name": "Projects",
       "description": "Manage active project boards",
       "url": "/projects",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Stats",
       "short_name": "Stats",
       "description": "View productivity statistics",
       "url": "/dashboard",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }
