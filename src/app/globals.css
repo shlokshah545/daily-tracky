@@ -9,30 +9,30 @@
 /* ─── DARK MODE TOKENS (Default) ─── */
 :root,
 html.dark {
-  /* Backgrounds — Deep Forest Emerald Midnight */
-  --bg:           #041611;   /* Deep emerald midnight */
-  --bg-card:      #09251c;   /* Rich forest dark card */
-  --bg-elevated:  #0f3529;   /* Elevated surface */
-  --bg-muted:     #164a39;   /* Slate/emerald muted */
-  --bg-hover:     #123e30;
+  /* Backgrounds — Pure Pitch Black & Neutral Sleek Surfaces */
+  --bg:           #08080a;   /* Pure sleek black, not green */
+  --bg-card:      #111114;   /* Neutral dark card */
+  --bg-elevated:  #17171b;   /* Elevated surface */
+  --bg-muted:     #222227;   /* Muted surface */
+  --bg-hover:     #1c1c21;
 
-  /* Borders */
-  --border:       #143d2f;
-  --border-strong: #1d5240;
+  /* Borders — Clean neutral dark */
+  --border:       #232328;
+  --border-strong: #33333d;
 
-  /* Text */
-  --text-1:       #f0fdf4;   /* Mint-white */
-  --text-2:       #dcfce7;   /* Light mint */
-  --text-3:       #86efac;   /* Soft sage/emerald */
-  --text-4:       #4ade80;   /* Muted green */
-  --text-disabled: #1d4d3d;
+  /* Text — Clean crisp white & neutral grays (emerald used for accents) */
+  --text-1:       #f4f4f6;   /* Crisp white */
+  --text-2:       #d1d1d6;   /* Light neutral */
+  --text-3:       #9e9ea7;   /* Medium neutral */
+  --text-4:       #6b6b75;   /* Subtle neutral */
+  --text-disabled: #383842;
 
-  /* Accent — Emerald from Logo */
+  /* Accent — Emerald from Logo only for text, badges, buttons, active states */
   --accent:       #10b981;
   --accent-hover: #059669;
-  --accent-muted: rgba(16, 185, 129, 0.16);
+  --accent-muted: rgba(16, 185, 129, 0.12);
   --accent-text:  #34d399;
-  --accent-glow:  rgba(16, 185, 129, 0.35);
+  --accent-glow:  rgba(16, 185, 129, 0.22);
 
   /* Semantic */
   --success:      #10b981;
@@ -163,7 +163,7 @@ html.light {
   height: 600px;
   top: -200px;
   right: -100px;
-  background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%);
   animation: aurora-1 22s ease-in-out infinite;
 }
 
@@ -172,7 +172,7 @@ html.light {
   height: 500px;
   bottom: -150px;
   left: -100px;
-  background: radial-gradient(circle, rgba(5,150,105,0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(5,150,105,0.04) 0%, transparent 70%);
   animation: aurora-2 28s ease-in-out infinite;
 }
 

@@ -5,6 +5,7 @@ import { Plus, X, Tag, Calendar, Clock, Loader2, Check, Repeat } from 'lucide-re
 import { parseNaturalTask } from '@/lib/nlp-parser'
 import { formatRecurrenceLabel } from '@/lib/recurrence'
 import { useUIStore } from '@/lib/store'
+import { recordNewTask } from '@/lib/clientData'
 
 interface Props { defaultDate?: string; onAdd?: () => void; placeholder?: string }
 
@@ -36,28 +37,49 @@ export function TaskQuickAdd({ defaultDate, onAdd, placeholder }: Props) {
     e.preventDefault()
     if (!input.trim() || loading) return
     setLoading(true)
+    const taskPayload = {
+      title: parsed?.title || input.trim(),
+      priority: parsed?.priority || 'medium',
+      dueDate: parsed?.dueDate || defaultDate || null,
+      dueTime: parsed?.dueTime || null,
+      isRecurring: parsed?.isRecurring || false,
+      recurrenceRule: parsed?.recurrenceRule ? JSON.stringify(parsed.recurrenceRule) : null,
+      status: 'not_started',
+    }
+    const tempId = `local_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
+    recordNewTask({
+      id: tempId,
+      ...taskPayload,
+      subtasks: [],
+      tags: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as any)
+
+    setInput('')
+    setFlash(true)
+    setTimeout(() => setFlash(false), 1000)
+    useUIStore.getState().refreshTasks()
+    useUIStore.getState().refreshProjects()
+    onAdd?.()
+
     try {
-      await fetch('/api/tasks', {
+      const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: parsed?.title || input.trim(),
-          priority: parsed?.priority || 'medium',
-          dueDate: parsed?.dueDate || defaultDate,
-          dueTime: parsed?.dueTime || null,
-          isRecurring: parsed?.isRecurring || false,
-          recurrenceRule: parsed?.recurrenceRule ? JSON.stringify(parsed.recurrenceRule) : null,
-          status: 'not_started',
-        }),
+        body: JSON.stringify(taskPayload),
       })
-      setInput('')
-      setFlash(true)
-      setTimeout(() => setFlash(false), 1000)
-      useUIStore.getState().refreshTasks()
-      useUIStore.getState().refreshProjects()
-      onAdd?.()
+      if (res.ok) {
+        const data = await res.json()
+        if (data?.task) {
+          recordNewTask(data.task)
+        }
+      }
+    } catch (err) {
+      console.warn('Background server sync failed, task preserved locally:', err)
     } finally {
       setLoading(false)
+      useUIStore.getState().refreshTasks()
     }
   }
 

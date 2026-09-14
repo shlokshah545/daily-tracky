@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Tag as TagIcon, Filter } from 'lucide-react'
 import { TaskCard } from '@/components/tasks/TaskCard'
 import { useUIStore } from '@/lib/store'
+import { mergeWithLocalTasks } from '@/lib/clientData'
 import type { Task } from '@/types'
 
 interface TagWithTasks {
@@ -27,7 +28,8 @@ export default function TagsPage() {
   }, [tagsVersion, tasksVersion])
 
   const currentTag = tags.find(t => t.id === selectedTag)
-  const tasks = currentTag?.tasks.map(t => t.task) || []
+  const rawTagTasks = currentTag?.tasks.map(t => t.task) || []
+  const tasks = mergeWithLocalTasks(rawTagTasks)
   const totalTasksCount = tags.reduce((acc, t) => acc + t.tasks.length, 0)
 
   function handleComplete(id: string) {

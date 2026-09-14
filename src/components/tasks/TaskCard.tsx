@@ -10,6 +10,8 @@ import { useUIStore } from '@/lib/store'
 import type { Task, Subtask } from '@/types'
 import { formatRecurrenceLabel } from '@/lib/recurrence'
 
+import { markTaskAsDeleted, recordTaskUpdate } from '@/lib/clientData'
+
 interface TaskCardProps {
   task: Task
   onComplete?: (id: string) => void
@@ -41,6 +43,8 @@ export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCa
     if (completing) return
     setCompleting(true)
     const newStatus = isDone ? 'not_started' : 'done'
+    recordTaskUpdate(task.id, { status: newStatus, completedAt: newStatus === 'done' ? new Date() : null })
+    onComplete?.(task.id)
     try {
       await fetch(`/api/tasks/${task.id}`, {
         method: 'PUT',
@@ -49,7 +53,6 @@ export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCa
       })
       useUIStore.getState().refreshTasks()
       useUIStore.getState().refreshProjects()
-      onComplete?.(task.id)
     } finally {
       setCompleting(false)
     }
@@ -59,12 +62,15 @@ export function TaskCard({ task, onComplete, onDelete, compact = false }: TaskCa
     e.stopPropagation()
     if (deleting) return
     setDeleting(true)
+    markTaskAsDeleted(task.id)
+    onDelete?.(task.id)
     try {
       await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' })
       useUIStore.getState().refreshTasks()
       useUIStore.getState().refreshProjects()
-      onDelete?.(task.id)
     } catch {
+      // kept deleted locally
+    } finally {
       setDeleting(false)
     }
   }

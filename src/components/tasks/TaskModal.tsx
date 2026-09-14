@@ -6,6 +6,7 @@ import type { Task, Project, Tag as TagType, Subtask } from '@/types'
 import { format } from 'date-fns'
 import { DAY_OPTIONS, formatRecurrenceLabel, RecurrenceRule } from '@/lib/recurrence'
 import { useUIStore } from '@/lib/store'
+import { recordNewTask, recordTaskUpdate, markTaskAsDeleted } from '@/lib/clientData'
 
 interface TaskModalProps {
   taskId?: string | null
@@ -145,6 +146,20 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
       subtasks: subtasks.map((s, i) => ({ ...s, order: i })),
     }
 
+    const tempId = isEditing ? taskId! : `local_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
+    const optimisticTask = {
+      id: tempId,
+      ...payload,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as any
+
+    if (isEditing) {
+      recordTaskUpdate(taskId!, payload as any)
+    } else {
+      recordNewTask(optimisticTask)
+    }
+
     try {
       const url = isEditing ? `/api/tasks/${taskId}` : '/api/tasks'
       const method = isEditing ? 'PUT' : 'POST'
@@ -155,18 +170,27 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
       })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
-        alert('Could not save task: ' + (errData.error || res.statusText))
-        setSaving(false)
-        return
+        console.warn('Could not save to remote server:', errData)
+      } else {
+        const data = await res.json()
+        if (data?.task) {
+          if (isEditing) {
+            recordTaskUpdate(taskId!, data.task)
+          } else {
+            recordNewTask(data.task)
+          }
+        }
       }
-      const data = await res.json()
       useUIStore.getState().refreshTasks()
       useUIStore.getState().refreshProjects()
-      onSave?.(data.task)
+      onSave?.(optimisticTask)
       onClose()
     } catch (err: unknown) {
-      console.error(err)
-      alert('Error connecting to server. Please try again.')
+      console.warn('Network issue saving task, preserved locally:', err)
+      useUIStore.getState().refreshTasks()
+      useUIStore.getState().refreshProjects()
+      onSave?.(optimisticTask)
+      onClose()
     } finally {
       setSaving(false)
     }
@@ -602,18 +626,14 @@ export function TaskModal({ taskId, initialDate, onClose, onSave }: TaskModalPro
                     className="btn btn-danger btn-sm"
                     onClick={async () => {
                       if (confirm('Delete this task?')) {
+                        markTaskAsDeleted(taskId!)
+                        useUIStore.getState().refreshTasks()
+                        useUIStore.getState().refreshProjects()
+                        onClose()
                         try {
-                          const res = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
-                          if (!res.ok) {
-                            const errData = await res.json().catch(() => ({}))
-                            alert('Could not delete task: ' + (errData.error || res.statusText))
-                            return
-                          }
-                          useUIStore.getState().refreshTasks()
-                          useUIStore.getState().refreshProjects()
-                          onClose()
+                          await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
                         } catch {
-                          alert('Error deleting task. Please try again.')
+                          // preserved as deleted locally
                         }
                       }
                     }}

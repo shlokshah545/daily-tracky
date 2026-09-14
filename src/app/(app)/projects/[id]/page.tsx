@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { TaskCard } from '@/components/tasks/TaskCard'
 import { TaskQuickAdd } from '@/components/tasks/TaskQuickAdd'
 import { useUIStore } from '@/lib/store'
+import { mergeWithLocalTasks, recordTaskUpdate } from '@/lib/clientData'
 import type { Project, Task } from '@/types'
 
 const COLUMNS = [
@@ -133,7 +134,12 @@ export default function ProjectDetailPage({ params }: PageProps) {
     try {
       const res = await fetch(`/api/projects/${id}`)
       const data = await res.json()
-      setProject(data.project)
+      if (data.project) {
+        setProject({
+          ...data.project,
+          tasks: mergeWithLocalTasks(data.project.tasks || []),
+        })
+      }
     } catch (err) {
       console.error(err)
     } finally {
@@ -161,18 +167,24 @@ export default function ProjectDetailPage({ params }: PageProps) {
     const task = project.tasks.find(t => t.id === taskId)
     if (!task || task.status === newStatus) return
 
+    recordTaskUpdate(taskId, { status: newStatus as Task['status'] })
+
     setProject(prev => prev ? {
       ...prev,
       tasks: prev.tasks.map(t => t.id === taskId ? { ...t, status: newStatus as Task['status'] } : t),
     } : null)
 
-    await fetch(`/api/tasks/${taskId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus }),
-    })
-    useUIStore.getState().refreshTasks()
-    useUIStore.getState().refreshProjects()
+    try {
+      await fetch(`/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+      useUIStore.getState().refreshTasks()
+      useUIStore.getState().refreshProjects()
+    } catch {
+      // preserved locally
+    }
   }
 
   function handleTaskComplete(id: string) {

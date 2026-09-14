@@ -13,6 +13,7 @@ import {
 import { TaskCard } from '@/components/tasks/TaskCard'
 import { TaskQuickAdd } from '@/components/tasks/TaskQuickAdd'
 import { useUIStore } from '@/lib/store'
+import { mergeWithLocalTasks } from '@/lib/clientData'
 import type { Task, Project } from '@/types'
 
 type StandingPeriod = 'today' | 'week' | 'month'
@@ -41,15 +42,18 @@ export default function TodayPage() {
   const fetchData = useCallback(async () => {
     try {
       const [taskRes, projRes, analyticsRes] = await Promise.all([
-        fetch(`/api/tasks?date=${todayStr}`),
-        fetch('/api/projects'),
-        fetch('/api/analytics?days=7'),
+        fetch(`/api/tasks?date=${todayStr}`).catch(() => null),
+        fetch('/api/projects').catch(() => null),
+        fetch('/api/analytics?days=7').catch(() => null),
       ])
-      const taskData = await taskRes.json()
-      const projData = await projRes.json()
-      const analyticsData = await analyticsRes.json()
+      const taskData = taskRes ? await taskRes.json().catch(() => ({})) : {}
+      const projData = projRes ? await projRes.json().catch(() => ({})) : {}
+      const analyticsData = analyticsRes ? await analyticsRes.json().catch(() => ({})) : {}
 
-      setTasks(taskData.tasks || [])
+      const rawTasks = taskData.tasks || []
+      const merged = mergeWithLocalTasks(rawTasks)
+
+      setTasks(merged)
       setProjects(projData.projects || [])
       setStreak(analyticsData.currentStreak || 0)
       setTotalStudyMinutes(analyticsData.totalStudyMinutes || 0)
